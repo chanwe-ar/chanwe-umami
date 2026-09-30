@@ -17,6 +17,8 @@ services:
       # OIDC_WRITE_ROLE: write
       # OIDC_VIEW_ROLE: view-only
       # OIDC_DEFAULT_ROLE: view-only
+      # Required for two-factor authentication, generate with: openssl rand -hex 32
+      TWO_FACTOR_ENCRYPTION_KEY: replace-me-with-a-64-character-hex-string
     depends_on:
       db:
         condition: service_healthy
