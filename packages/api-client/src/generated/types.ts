@@ -290,6 +290,46 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/api/auth/oidc/callback': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Complete single sign-on
+     * @description Redirect target of the identity provider. Exchanges the authorization code (with the PKCE verifier), provisions or updates the Umami user, clears the flow cookies and redirects to the login page with either a session token in the URL fragment or an `error` query parameter (`sso_failed`, `sso_no_role`, `sso_admin_reserved`).
+     */
+    get: operations['oidcCallback'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/auth/oidc/login': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Start single sign-on
+     * @description Browser navigation that starts the OpenID Connect authorization code flow (PKCE S256). Stores the state, nonce and PKCE verifier in short-lived cookies and redirects to the identity provider.
+     */
+    get: operations['oidcLogin'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/api/auth/sso': {
     parameters: {
       query?: never;
@@ -4950,6 +4990,109 @@ export interface operations {
            *         "code": "unauthorized",
            *         "message": "Unauthorized.",
            *         "status": 401
+           *       }
+           *     }
+           */
+          'application/json': components['schemas']['ApiError'];
+        };
+      };
+    };
+  };
+  oidcCallback: {
+    parameters: {
+      query?: {
+        /** @description Authorization code issued by the identity provider. */
+        code?: string;
+        /** @description Error code when the identity provider refused the request. */
+        error?: string;
+        /** @description Human-readable detail for `error`. */
+        error_description?: string;
+        /** @description State echoed by the identity provider; must match the state cookie. */
+        state?: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Redirects to `/login/sso` with a session token or an error code. */
+      302: {
+        headers: {
+          /** @description Login page URL carrying `#token=` on success or `?error=` on failure. */
+          Location?: string;
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Not found. */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          /**
+           * @example {
+           *       "error": {
+           *         "code": "not-found",
+           *         "message": "Not found.",
+           *         "status": 404
+           *       }
+           *     }
+           */
+          'application/json': components['schemas']['ApiError'];
+        };
+      };
+    };
+  };
+  oidcLogin: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Redirects to the identity provider authorization endpoint. */
+      302: {
+        headers: {
+          /** @description Authorization request URL at the identity provider. */
+          Location?: string;
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Not found. */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          /**
+           * @example {
+           *       "error": {
+           *         "code": "not-found",
+           *         "message": "Not found.",
+           *         "status": 404
+           *       }
+           *     }
+           */
+          'application/json': components['schemas']['ApiError'];
+        };
+      };
+      /** @description Server error. */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          /**
+           * @example {
+           *       "error": {
+           *         "code": "server-error",
+           *         "message": "Server error.",
+           *         "status": 500
            *       }
            *     }
            */
