@@ -12,6 +12,7 @@ import {
   handleCallback,
   isOidcEnabled,
   OIDC_NONCE_COOKIE,
+  OIDC_PKCE_COOKIE,
   OIDC_STATE_COOKIE,
   SEEDED_ADMIN_USER_ID,
 } from '@/lib/oidc';
@@ -39,6 +40,7 @@ function ssoRedirect(request: NextRequest, params: Record<string, string>, hash?
 
   response.cookies.set(OIDC_STATE_COOKIE, '', cookieOptions);
   response.cookies.set(OIDC_NONCE_COOKIE, '', cookieOptions);
+  response.cookies.set(OIDC_PKCE_COOKIE, '', cookieOptions);
 
   return response;
 }
@@ -57,18 +59,19 @@ export async function GET(request: NextRequest) {
   const state = request.nextUrl.searchParams.get('state');
   const expectedState = request.cookies.get(OIDC_STATE_COOKIE)?.value;
   const expectedNonce = request.cookies.get(OIDC_NONCE_COOKIE)?.value;
+  const codeVerifier = request.cookies.get(OIDC_PKCE_COOKIE)?.value;
 
   if (!state || !expectedState || state !== expectedState) {
     return ssoRedirect(request, { error: 'sso_failed' });
   }
 
-  if (!expectedNonce) {
-    console.error('OIDC callback missing nonce cookie');
+  if (!expectedNonce || !codeVerifier) {
+    console.error('OIDC callback missing nonce or PKCE cookie');
     return ssoRedirect(request, { error: 'sso_failed' });
   }
 
   try {
-    const claims = await handleCallback(request, expectedState, expectedNonce);
+    const claims = await handleCallback(request, expectedState, expectedNonce, codeVerifier);
     const role = extractRoleFromClaims(claims);
 
     if (!role) {

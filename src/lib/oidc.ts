@@ -5,6 +5,7 @@ import type { Role } from '@/lib/types';
 
 export const OIDC_STATE_COOKIE = 'umami.oidc-state';
 export const OIDC_NONCE_COOKIE = 'umami.oidc-nonce';
+export const OIDC_PKCE_COOKIE = 'umami.oidc-pkce';
 export const OIDC_COOKIE_MAX_AGE_SECONDS = 5 * 60;
 export const SEEDED_ADMIN_USER_ID = '41e2b680-648e-4b09-bcd7-3e2b10c06264';
 
@@ -100,7 +101,8 @@ async function discover(): Promise<client.Configuration> {
     throw new Error('OIDC is not configured');
   }
 
-  return client.discovery(new URL(issuer), clientId, clientSecret);
+  // Identity registers the client with client_secret_basic and requires PKCE.
+  return client.discovery(new URL(issuer), clientId, clientSecret, client.ClientSecretBasic(clientSecret));
 }
 
 export async function getOidcConfiguration(): Promise<client.Configuration> {
@@ -118,18 +120,23 @@ export async function createAuthorizationRequest(request: Request): Promise<{
   url: URL;
   state: string;
   nonce: string;
+  codeVerifier: string;
 }> {
   const config = await getOidcConfiguration();
   const state = client.randomState();
   const nonce = client.randomNonce();
+  const codeVerifier = client.randomPKCECodeVerifier();
+  const codeChallenge = await client.calculatePKCECodeChallenge(codeVerifier);
   const url = client.buildAuthorizationUrl(config, {
     redirect_uri: getRedirectUri(request),
     scope: getScope(),
     state,
     nonce,
+    code_challenge: codeChallenge,
+    code_challenge_method: 'S256',
   });
 
-  return { url, state, nonce };
+  return { url, state, nonce, codeVerifier };
 }
 
 function hasRolesClaim(claims: Record<string, unknown>): boolean {
@@ -140,6 +147,7 @@ export async function handleCallback(
   request: Request,
   expectedState: string,
   expectedNonce: string,
+  pkceCodeVerifier?: string,
 ): Promise<Record<string, unknown>> {
   const config = await getOidcConfiguration();
   const currentUrl = new URL(request.url);
@@ -150,6 +158,7 @@ export async function handleCallback(
     expectedState,
     expectedNonce,
     idTokenExpected: true,
+    ...(pkceCodeVerifier ? { pkceCodeVerifier } : {}),
   });
 
   const idClaims = tokens.claims();

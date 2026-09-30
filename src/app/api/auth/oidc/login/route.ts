@@ -4,6 +4,7 @@ import {
   getOidcCookieOptions,
   isOidcEnabled,
   OIDC_NONCE_COOKIE,
+  OIDC_PKCE_COOKIE,
   OIDC_STATE_COOKIE,
 } from '@/lib/oidc';
 import { parseRequest } from '@/lib/request';
@@ -23,12 +24,13 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const { url, state, nonce } = await createAuthorizationRequest(request);
+    const { url, state, nonce, codeVerifier } = await createAuthorizationRequest(request);
     const response = NextResponse.redirect(url, 302);
     const cookieOptions = getOidcCookieOptions(request);
 
     response.cookies.set(OIDC_STATE_COOKIE, state, cookieOptions);
     response.cookies.set(OIDC_NONCE_COOKIE, nonce, cookieOptions);
+    response.cookies.set(OIDC_PKCE_COOKIE, codeVerifier, cookieOptions);
 
     return response;
   } catch (err) {
