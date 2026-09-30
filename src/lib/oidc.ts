@@ -102,7 +102,12 @@ async function discover(): Promise<client.Configuration> {
   }
 
   // Identity registers the client with client_secret_basic and requires PKCE.
-  return client.discovery(new URL(issuer), clientId, clientSecret, client.ClientSecretBasic(clientSecret));
+  return client.discovery(
+    new URL(issuer),
+    clientId,
+    clientSecret,
+    client.ClientSecretBasic(clientSecret),
+  );
 }
 
 export async function getOidcConfiguration(): Promise<client.Configuration> {
