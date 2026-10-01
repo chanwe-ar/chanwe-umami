@@ -15,8 +15,6 @@ import { Legend } from '@/components/metrics/Legend';
 import { getChartBucketIndex } from '@/lib/charts';
 import { DEFAULT_ANIMATION_DURATION } from '@/lib/constants';
 
-ChartJS.defaults.font.family = 'Inter';
-
 export interface ChartProps extends BoxProps {
   type?: 'bar' | 'bubble' | 'doughnut' | 'pie' | 'line' | 'polarArea' | 'radar' | 'scatter';
   chartData?: ChartData<any, any, unknown> & { focusLabel?: string };
@@ -171,6 +169,9 @@ export function Chart({
   // Create chart
   useEffect(() => {
     if (canvas.current) {
+      // Canvas text cannot read CSS variables, and next/font gives Satoshi a
+      // hashed family name, so hand Chart.js the stack the page resolved.
+      ChartJS.defaults.font.family = getComputedStyle(canvas.current).fontFamily;
       chart.current = new ChartJS(canvas.current, {
         type,
         data: chartData,
