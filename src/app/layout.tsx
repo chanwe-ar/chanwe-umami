@@ -40,6 +40,11 @@ export default function ({ children }) {
         <meta name="robots" content="noindex,nofollow" />
       </head>
       <body>
+        {/* The CHANWE app veil (chanwe-ui brand/effects/app-veil.js): a
+            blocking script first in the body, so the hand-off from Espacios
+            is up before the first paint. It removes its own node, which
+            React 19 skips during hydration. */}
+        <script src="/brand/app-veil.js" data-icon="/favicon.svg?v=2" data-label="Umami" />
         <Suspense>
           <Providers>{children}</Providers>
         </Suspense>
