@@ -1,6 +1,6 @@
 {
-  "name": "",
-  "short_name": "",
+  "name": "Umami \u00b7 CHANWE",
+  "short_name": "Umami",
   "icons": [
     {
       "src": "/android-chrome-192x192.png",
@@ -13,7 +13,7 @@
       "type": "image/png"
     }
   ],
-  "theme_color": "#ffffff",
+  "theme_color": "#fd3810",
   "background_color": "#ffffff",
   "display": "standalone"
 }
