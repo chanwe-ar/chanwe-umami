@@ -37,6 +37,7 @@ export function TopNav() {
 
   return (
     <Row
+      className="chanwe-topbar"
       position="sticky"
       top="0"
       alignItems="center"

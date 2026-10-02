@@ -23,6 +23,7 @@ export function PageHeader({
 }) {
   return (
     <Grid
+      className="chanwe-page-header"
       columns={{ base: '1fr', md: '1fr 1fr' }}
       paddingY="6"
       marginBottom="6"

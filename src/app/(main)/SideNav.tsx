@@ -4,13 +4,13 @@ import {
   Column,
   Icon,
   Row,
-  Text,
   Tooltip,
   TooltipTrigger,
 } from '@umami/react-zen';
 import { AdminNav } from '@/app/(main)/admin/AdminNav';
 import { SettingsNav } from '@/app/(main)/settings/SettingsNav';
 import { WebsiteNav } from '@/app/(main)/websites/[websiteId]/WebsiteNav';
+import { ChanweBrand } from '@/components/common/ChanweBrand';
 import { IconLabel } from '@/components/common/IconLabel';
 import Link from '@/components/common/Link';
 import { OverlayScrollArea } from '@/components/common/OverlayScrollArea';
@@ -25,7 +25,6 @@ import {
   PanelsLeftBottom,
 } from '@/components/icons';
 import { UserButton } from '@/components/input/UserButton';
-import { Logo } from '@/components/svg';
 
 export function SideNav(props: any) {
   const { t, labels } = useMessages();
@@ -72,6 +71,8 @@ export function SideNav(props: any) {
   return (
     <Column
       {...props}
+      className="chanwe-sidenav"
+      data-collapsed={isCollapsed || undefined}
       backgroundColor="surface"
       border
       borderRadius
@@ -80,7 +81,8 @@ export function SideNav(props: any) {
       minHeight="0"
       margin="2"
       style={{
-        width: isCollapsed ? '60px' : '240px',
+        // CHANWE app shell: 248px rail, 76px folded (chanwe-ui app-shell.css).
+        width: isCollapsed ? '76px' : '248px',
         transition: 'width 0.2s ease-in-out',
         overflow: 'hidden',
       }}
@@ -97,11 +99,7 @@ export function SideNav(props: any) {
           justifyContent={isCollapsed ? 'center' : 'space-between'}
           flexGrow="1"
         >
-          {!isCollapsed && (
-            <IconLabel icon={<Logo />}>
-              <Text weight="bold">umami</Text>
-            </IconLabel>
-          )}
+          {!isCollapsed && <ChanweBrand tone="inverse" />}
           <PanelButton />
         </Row>
       </Row>

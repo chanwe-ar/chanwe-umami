@@ -47,6 +47,7 @@ export const MetricCard = ({
 
   return (
     <Column
+      className="chanwe-kpi"
       justifyContent="center"
       paddingX="6"
       paddingY="4"
@@ -57,7 +58,7 @@ export const MetricCard = ({
     >
       {showLabel && (
         <Row justifyContent="space-between" alignItems="flex-start">
-          <Text weight="bold" wrap="nowrap">
+          <Text className="chanwe-kpi__label" weight="bold" wrap="nowrap">
             {label}
           </Text>
           {tooltip && (
@@ -72,7 +73,7 @@ export const MetricCard = ({
           )}
         </Row>
       )}
-      <Text size="4xl" weight="bold" wrap="nowrap">
+      <Text className="chanwe-kpi__value" size="4xl" weight="bold" wrap="nowrap">
         <AnimatedDiv title={value?.toString()}>{valueText}</AnimatedDiv>
       </Text>
       {showChange && (

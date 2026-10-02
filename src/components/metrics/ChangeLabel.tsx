@@ -42,6 +42,7 @@ export function ChangeLabel({
   return (
     <Row
       {...props}
+      className="chanwe-change"
       style={style}
       alignItems="center"
       alignSelf="flex-start"

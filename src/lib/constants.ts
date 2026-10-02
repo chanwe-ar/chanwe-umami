@@ -1,3 +1,5 @@
+import { BRAND, BRAND_CHART_COLORS } from '@/lib/brand';
+
 export const CURRENT_VERSION = process.env.currentVersion;
 export const AUTH_TOKEN = 'umami.auth';
 export const LOCALE_CONFIG = 'umami.locale';
@@ -233,35 +235,31 @@ export const ROLE_PERMISSIONS = {
   [ROLES.teamViewOnly]: [],
 } as const;
 
+// CHANWE: chart and map colours come from the brand tokens (src/lib/brand.ts).
+// primary is the orange (visitors), secondary the slate behind it (views),
+// compare* the previous-period lines.
 export const THEME_COLORS = {
   light: {
-    primary: '#2680eb',
-    text: '#838383',
-    line: '#d9d9d9',
-    fill: '#f9f9f9',
+    primary: BRAND.primary,
+    secondary: BRAND['fg-subtle'],
+    compareViews: BRAND['fg-subtle'],
+    compareVisitors: BRAND.ink,
+    text: BRAND['fg-subtle'],
+    line: BRAND.rule,
+    fill: BRAND['surface-sunken'],
   },
   dark: {
-    primary: '#2680eb',
-    text: '#7b7b7b',
-    line: '#3a3a3a',
-    fill: '#191919',
+    primary: BRAND.primary,
+    secondary: BRAND['ink-fg'],
+    compareViews: BRAND['ink-fg'],
+    compareVisitors: BRAND.paper,
+    text: BRAND['ink-fg'],
+    line: BRAND['rule-ink'],
+    fill: BRAND['ink-light'],
   },
 } as const;
 
-export const CHART_COLORS = [
-  '#2680eb',
-  '#9256d9',
-  '#44b556',
-  '#e68619',
-  '#e34850',
-  '#f7bd12',
-  '#01bad7',
-  '#6734bc',
-  '#89c541',
-  '#ffc301',
-  '#ec1562',
-  '#ffec16',
-];
+export const CHART_COLORS = BRAND_CHART_COLORS;
 
 export const DOMAIN_REGEX =
   /^(localhost(:[1-9]\d{0,4})?|((?=[a-z0-9-_]{1,63}\.)(xn--)?[a-z0-9-_]+(-[a-z0-9-_]+)*\.)+(xn--)?[a-z0-9-_]{2,63})$/;
