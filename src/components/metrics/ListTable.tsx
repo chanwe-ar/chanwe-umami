@@ -69,6 +69,7 @@ export function ListTable({
   return (
     <Column gap>
       <Grid
+        className="chanwe-list-header"
         alignItems="center"
         justifyContent="space-between"
         paddingLeft="2"

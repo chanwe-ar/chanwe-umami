@@ -1,12 +1,12 @@
-import { Column, Grid, Row, Text } from '@umami/react-zen';
+import { Column, Grid, Row } from '@umami/react-zen';
 import { WebsiteNav } from '@/app/(main)/websites/[websiteId]/WebsiteNav';
+import { ChanweBrand } from '@/components/common/ChanweBrand';
 import { IconLabel } from '@/components/common/IconLabel';
 import Link from '@/components/common/Link';
 import { useMessages, useNavigation } from '@/components/hooks';
 import { Globe, Grid2x2, LayoutDashboard, LinkIcon } from '@/components/icons';
 import { MobileMenuButton } from '@/components/input/MobileMenuButton';
 import { UserButton } from '@/components/input/UserButton';
-import { Logo } from '@/components/svg';
 import { AdminNav } from './admin/AdminNav';
 import { SettingsNav } from './settings/SettingsNav';
 
@@ -45,7 +45,13 @@ export function MobileNav() {
   ];
 
   return (
-    <Grid columns="auto 1fr" flexGrow={1} backgroundColor="surface-sunken" borderRadius>
+    <Grid
+      className="chanwe-mobilebar"
+      columns="auto 1fr"
+      flexGrow={1}
+      backgroundColor="surface-sunken"
+      borderRadius
+    >
       <MobileMenuButton>
         {({ close }) => {
           return (
@@ -71,9 +77,7 @@ export function MobileNav() {
         }}
       </MobileMenuButton>
       <Row alignItems="center" justifyContent="center" flexGrow={1}>
-        <IconLabel icon={<Logo />} style={{ width: 'auto' }}>
-          <Text weight="bold">umami</Text>
-        </IconLabel>
+        <ChanweBrand />
       </Row>
     </Grid>
   );

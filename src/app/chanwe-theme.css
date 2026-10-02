@@ -1,0 +1,573 @@
+/*
+ * CHANWE theme layer for the Umami fork.
+ *
+ * Loaded last (layout.tsx), unlayered, so it wins over Zen's layered
+ * utilities without !important. It does two things:
+ *   1. maps Zen's --zen-* variables (and Tailwind's radius scale) onto the
+ *      CHANWE brand tokens, light and dark;
+ *   2. restyles a few surfaces toward the chanwe-ui kit (app-shell.css,
+ *      kit-primitives.css): the 248/76 rail, the 56px bar, the page header,
+ *      data tables, KPI tiles, pills, tabs and inputs.
+ *
+ * Every colour is a var(--cw-brand-*) from ../brand/tokens.css, a copy of
+ * chanwe-ui brand/tokens/tokens.css kept current by brand-sync. Do not write
+ * hex values here: map a token. Components opt in with chanwe-* class names;
+ * everything else is reached through Zen's data-slot attributes, so upstream
+ * merges touch this file and a handful of className props only.
+ */
+@import "../brand/tokens.css";
+
+/* ── 1. Tokens ─────────────────────────────────────────────────────────── */
+
+:root,
+[data-palette],
+[data-theme="light"] {
+  /* Faces: next/font variables first (hashed family names), brand stacks after. */
+  --chanwe-font-body: var(--font-satoshi), var(--cw-brand-font-body);
+  --chanwe-font-display: var(--font-schibsted), var(--cw-brand-font-display);
+  --chanwe-font-mono: var(--font-jetbrains-mono), var(--cw-brand-font-mono);
+  --zen-font-family: var(--chanwe-font-body);
+  --zen-font-family-mono: var(--chanwe-font-mono);
+
+  /* 4px on cards and controls; Tailwind's scale follows so rounded-* agree. */
+  --zen-radius: var(--cw-brand-radius-control);
+  --radius-sm: var(--cw-brand-radius-control);
+  --radius-md: var(--cw-brand-radius-control);
+  --radius-lg: var(--cw-brand-radius-card);
+  --radius-xl: var(--cw-brand-radius-card);
+  --radius-2xl: var(--cw-brand-radius-card);
+  --radius-3xl: var(--cw-brand-radius-card);
+
+  /* Zen's neutral scale, re-pointed at the slate-on-paper brand scale. */
+  --zen-palette-50: var(--cw-brand-paper);
+  --zen-palette-100: var(--cw-brand-surface-sunken);
+  --zen-palette-200: var(--cw-brand-rule);
+  --zen-palette-300: var(--cw-brand-rule-cool);
+  --zen-palette-400: var(--cw-brand-fg-subtle);
+  --zen-palette-500: var(--cw-brand-ink-fg);
+  --zen-palette-600: var(--cw-brand-body-fg);
+  --zen-palette-700: var(--cw-brand-rule-ink);
+  --zen-palette-800: var(--cw-brand-ink-light);
+  --zen-palette-900: var(--cw-brand-ink);
+  --zen-palette-950: color-mix(in srgb, var(--cw-brand-ink) 70%, var(--cw-brand-pure-black));
+
+  /* Shared by both themes. */
+  --chanwe-primary-hover: color-mix(in srgb, var(--cw-brand-primary) 92%, var(--cw-brand-ink));
+  --chanwe-primary-active: color-mix(in srgb, var(--cw-brand-primary) 84%, var(--cw-brand-ink));
+  --chanwe-primary-tint: color-mix(in srgb, var(--cw-brand-primary) 7%, var(--cw-brand-pure-white));
+  --chanwe-rail-bg: var(--cw-brand-ink-light);
+  --chanwe-rail-fg: color-mix(in srgb, var(--cw-brand-pure-white) 65%, transparent);
+  --chanwe-rail-label: color-mix(in srgb, var(--cw-brand-pure-white) 35%, transparent);
+  --chanwe-rail-hover: color-mix(in srgb, var(--cw-brand-pure-white) 10%, transparent);
+  --chanwe-rail-rule: color-mix(in srgb, var(--cw-brand-pure-white) 10%, transparent);
+  --chanwe-header-height: 56px;
+}
+
+/* Light. The same selectors as global.css, so this later file wins there too. */
+:root,
+[data-theme="light"] {
+  --zen-primary: var(--cw-brand-primary);
+  --zen-primary-fg: var(--cw-brand-pure-white);
+
+  --zen-surface: var(--cw-brand-surface-raised);
+  --zen-surface-raised: var(--cw-brand-paper);
+  --zen-surface-sunken: var(--cw-brand-surface-sunken);
+  --zen-surface-overlay: var(--cw-brand-surface-raised);
+  --zen-surface-inverted: var(--cw-brand-ink);
+  --zen-surface-disabled: var(--cw-brand-paper);
+
+  --zen-fg: var(--cw-brand-ink);
+  --zen-fg-muted: var(--cw-brand-fg-muted);
+  --zen-fg-disabled: var(--cw-brand-fg-subtle);
+  --chanwe-fg-subtle: var(--cw-brand-fg-subtle);
+
+  --zen-border: var(--cw-brand-rule);
+  --zen-border-muted: var(--cw-brand-rule);
+  --zen-border-strong: var(--cw-brand-rule-cool);
+  --chanwe-control-border: var(--cw-brand-rule-cool);
+
+  --zen-interactive-bg: var(--cw-brand-surface-sunken);
+  --zen-interactive-bg-hover: var(--cw-brand-surface-slate);
+  --zen-interactive-bg-pressed: var(--cw-brand-rule);
+
+  --zen-focus-ring: var(--cw-brand-primary);
+  --zen-focus-offset: var(--cw-brand-pure-white);
+
+  --zen-status-info: var(--cw-brand-status-info);
+  --zen-status-info-bg: color-mix(
+    in srgb,
+    var(--cw-brand-status-info) 12%,
+    var(--cw-brand-pure-white)
+  );
+  --zen-status-info-fg: var(--cw-brand-status-info);
+  --zen-status-success: var(--cw-brand-kpi-green);
+  --zen-status-success-bg: color-mix(
+    in srgb,
+    var(--cw-brand-status-success) 14%,
+    var(--cw-brand-pure-white)
+  );
+  --zen-status-success-fg: var(--cw-brand-kpi-green);
+  --zen-status-warning: var(--cw-brand-exec-status-regular);
+  --zen-status-warning-bg: var(--cw-brand-status-warning-bg);
+  --zen-status-warning-fg: var(--cw-brand-exec-status-regular);
+  --zen-status-error: var(--cw-brand-status-error);
+  --zen-status-error-bg: var(--cw-brand-status-error-bg);
+  --zen-status-error-fg: var(--cw-brand-status-error);
+
+  --chanwe-bar-bg: var(--cw-brand-surface-raised);
+  --chanwe-row-hover: color-mix(in srgb, var(--cw-brand-primary) 4%, var(--cw-brand-pure-white));
+}
+
+/* Dark: obsidian. Ink is the page, ink-light the cards, paper the text. */
+[data-theme="dark"],
+.dark {
+  --zen-primary: var(--cw-brand-primary);
+  --zen-primary-fg: var(--cw-brand-pure-white);
+
+  --zen-surface: var(--cw-brand-ink-light);
+  --zen-surface-raised: var(--cw-brand-ink);
+  --zen-surface-sunken: color-mix(in srgb, var(--cw-brand-ink-light) 55%, var(--cw-brand-ink));
+  --zen-surface-overlay: var(--cw-brand-ink-light);
+  --zen-surface-inverted: var(--cw-brand-paper);
+  --zen-surface-disabled: var(--cw-brand-ink-soft);
+
+  --zen-fg: var(--cw-brand-paper);
+  --zen-fg-muted: var(--cw-brand-rule-cool);
+  --zen-fg-disabled: var(--cw-brand-ink-fg);
+  --chanwe-fg-subtle: var(--cw-brand-fg-subtle);
+
+  --zen-border: var(--cw-brand-rule-ink);
+  --zen-border-muted: color-mix(in srgb, var(--cw-brand-rule-ink) 60%, var(--cw-brand-ink-light));
+  --zen-border-strong: var(--cw-brand-ink-fg);
+  --chanwe-control-border: var(--cw-brand-rule-ink);
+
+  --zen-interactive-bg: var(--cw-brand-ink-soft);
+  --zen-interactive-bg-hover: var(--cw-brand-rule-ink);
+  --zen-interactive-bg-pressed: var(--cw-brand-ink-fg);
+
+  --zen-focus-ring: var(--cw-brand-primary);
+  --zen-focus-offset: var(--cw-brand-ink);
+
+  --zen-status-info: var(--cw-brand-chart-blue);
+  --zen-status-info-bg: color-mix(in srgb, var(--cw-brand-status-info) 22%, transparent);
+  --zen-status-info-fg: var(--cw-brand-status-info-bg);
+  --zen-status-success: var(--cw-brand-chart-green);
+  --zen-status-success-bg: color-mix(in srgb, var(--cw-brand-status-success) 20%, transparent);
+  --zen-status-success-fg: var(--cw-brand-status-success-soft);
+  --zen-status-warning: var(--cw-brand-status-warning);
+  --zen-status-warning-bg: color-mix(in srgb, var(--cw-brand-status-warning) 18%, transparent);
+  --zen-status-warning-fg: var(--cw-brand-status-warning-bg);
+  --zen-status-error: var(--cw-brand-chart-red);
+  --zen-status-error-bg: color-mix(in srgb, var(--cw-brand-status-error) 22%, transparent);
+  --zen-status-error-fg: var(--cw-brand-status-error-bg);
+
+  --chanwe-bar-bg: var(--cw-brand-ink);
+  --chanwe-row-hover: color-mix(in srgb, var(--cw-brand-primary) 8%, var(--cw-brand-ink-light));
+}
+
+html,
+body {
+  font-family: var(--chanwe-font-body);
+}
+
+/* ── 2. Type ───────────────────────────────────────────────────────────── */
+
+/* Headings: Schibsted Grotesk, tight tracking (kit page header and section heading). */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+[data-slot="modal-title"],
+[data-slot="alert-dialog-title"],
+[data-slot="empty-title"] {
+  font-family: var(--chanwe-font-display);
+  letter-spacing: -0.025em;
+}
+
+/* Eyebrow: mono, uppercase, tracked, with the short orange rule. */
+.chanwe-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--chanwe-fg-subtle);
+  font: 500 10px / 1 var(--chanwe-font-mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.chanwe-eyebrow::before {
+  content: "";
+  width: 18px;
+  height: 1px;
+  background: var(--cw-brand-primary);
+}
+
+/* ── 3. Brand mark ─────────────────────────────────────────────────────── */
+
+.chanwe-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.chanwe-brand__logo {
+  display: block;
+  width: 88px;
+  height: auto;
+}
+
+.chanwe-brand > i {
+  width: 1px;
+  height: 12px;
+  background: var(--zen-border);
+}
+
+.chanwe-brand__product {
+  color: var(--cw-brand-primary);
+  font: 600 10px / 1 var(--chanwe-font-body);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.chanwe-brand[data-tone="auto"] .chanwe-brand__logo--white,
+.chanwe-brand[data-tone="inverse"] .chanwe-brand__logo--ink {
+  display: none;
+}
+
+[data-theme="dark"] .chanwe-brand[data-tone="auto"] .chanwe-brand__logo--ink {
+  display: none;
+}
+
+[data-theme="dark"] .chanwe-brand[data-tone="auto"] .chanwe-brand__logo--white {
+  display: block;
+}
+
+.chanwe-brand[data-tone="inverse"] > i {
+  background: var(--chanwe-rail-rule);
+}
+
+/* ── 4. Shell ──────────────────────────────────────────────────────────── */
+
+/*
+ * Sidebar: the dark rail of chanwe-ui app-shell.css, full height, flush to
+ * the edge. Zen's variables are re-scoped inside it, so Umami's nav rows
+ * (hover and selected use surface-sunken) pick up rail colours on their own.
+ */
+.chanwe-sidenav {
+  --zen-fg: var(--chanwe-rail-fg);
+  --zen-fg-muted: var(--chanwe-rail-fg);
+  --zen-border: var(--chanwe-rail-rule);
+  --zen-surface-sunken: var(--chanwe-rail-hover);
+  --zen-interactive-bg: var(--chanwe-rail-hover);
+  --zen-interactive-bg-hover: var(--chanwe-rail-hover);
+  margin: 0;
+  padding: 0 12px 12px;
+  border: 0;
+  border-radius: 0;
+  background-color: var(--chanwe-rail-bg);
+  color: var(--chanwe-rail-fg);
+}
+
+/* Brand row: as tall as the bar beside it, so the two rules meet. */
+.chanwe-sidenav > :first-child {
+  min-height: var(--chanwe-header-height);
+  margin: 0 -12px 16px;
+  padding: 0 12px;
+  border-bottom: 1px solid var(--chanwe-rail-rule);
+}
+
+.chanwe-sidenav > :first-child > div {
+  gap: 12px;
+  padding: 0 0 0 12px;
+}
+
+.chanwe-sidenav[data-collapsed] > :first-child > div {
+  padding: 0;
+}
+
+.chanwe-sidenav .chanwe-brand__logo {
+  width: 80px;
+}
+
+.chanwe-sidenav a {
+  color: var(--chanwe-rail-fg);
+  text-decoration: none;
+}
+
+.chanwe-sidenav a > * {
+  min-height: 40px;
+  font-size: 12px;
+  font-weight: 500;
+  transition:
+    color 0.2s,
+    background-color 0.2s;
+}
+
+.chanwe-sidenav a:hover > * {
+  color: var(--cw-brand-pure-white);
+}
+
+/* Selected row: Umami marks it with bg-surface-sunken; the kit fills it orange. */
+.chanwe-sidenav a > .bg-surface-sunken,
+.chanwe-sidenav a > .bg-surface-sunken:hover {
+  background-color: var(--cw-brand-primary);
+  color: var(--cw-brand-pure-white);
+}
+
+.chanwe-sidenav a > .bg-surface-sunken .font-bold {
+  font-weight: 500;
+}
+
+/* Group labels (Traffic, Behavior…): the rail's tracked caps. */
+.chanwe-sidenav .font-bold:not(a *) {
+  color: var(--chanwe-rail-label);
+  font: 600 10px / 1 var(--chanwe-font-body);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.chanwe-sidenav [data-slot="button"] svg,
+.chanwe-sidenav [data-slot="menu-trigger"] svg {
+  color: var(--chanwe-rail-fg);
+}
+
+/* Footer (user button) sits on a rule, as the kit's sidebar footer does. */
+.chanwe-sidenav > :last-child {
+  width: calc(100% + 24px);
+  margin: 0 -12px;
+  padding: 12px 12px 0;
+  border-top: 1px solid var(--chanwe-rail-rule);
+}
+
+/* Top bar: 56px, white, one rule, no fade. */
+.chanwe-topbar {
+  min-height: var(--chanwe-header-height);
+  border-bottom: 1px solid var(--zen-border);
+  background-color: var(--chanwe-bar-bg);
+}
+
+.chanwe-topbar > div:last-child:not(:first-child) {
+  display: none;
+}
+
+/* Phone bar: the kit's 56px mobile bar, flat, edge to edge, one rule. */
+:has(> .chanwe-mobilebar) {
+  padding: 0;
+}
+
+.chanwe-mobilebar {
+  min-height: var(--chanwe-header-height);
+  padding: 0 8px;
+  border-bottom: 1px solid var(--zen-border);
+  border-radius: 0;
+  background-color: var(--chanwe-bar-bg);
+}
+
+.chanwe-mobilebar > [data-slot="dialog-trigger"] {
+  align-self: center;
+  background-color: transparent;
+}
+
+/* ── 5. Page header ────────────────────────────────────────────────────── */
+
+.chanwe-page-header h2 {
+  color: var(--zen-fg);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+
+@media (min-width: 1024px) {
+  .chanwe-page-header h2 {
+    font-size: clamp(30px, 2.6vw, 38px);
+  }
+}
+
+/* ── 6. Controls ───────────────────────────────────────────────────────── */
+
+[data-slot="button"][data-variant="primary"],
+[data-slot="dialog-trigger"][data-variant="primary"],
+[data-slot="menu-trigger"][data-variant="primary"] {
+  background-color: var(--cw-brand-primary);
+  color: var(--cw-brand-pure-white);
+  transition:
+    background-color 0.2s var(--cw-brand-ease-standard),
+    transform 0.2s var(--cw-brand-ease-standard);
+}
+
+[data-slot="button"][data-variant="primary"]:hover,
+[data-slot="dialog-trigger"][data-variant="primary"]:hover,
+[data-slot="menu-trigger"][data-variant="primary"]:hover {
+  opacity: 1;
+  background-color: var(--chanwe-primary-hover);
+}
+
+[data-slot="button"][data-variant="primary"]:active,
+[data-slot="dialog-trigger"][data-variant="primary"]:active,
+[data-slot="menu-trigger"][data-variant="primary"]:active {
+  opacity: 1;
+  background-color: var(--chanwe-primary-active);
+}
+
+:is(button, a, input, select, textarea, summary, [role="tab"]):focus-visible {
+  outline: 2px solid var(--cw-brand-primary);
+  outline-offset: 2px;
+}
+
+/* Inputs, selects, search: the kit's rule-cool border, orange focus. */
+[data-slot="input"],
+[data-slot="input-group"],
+[data-slot="textarea"],
+[data-slot="select-trigger"],
+[data-slot="combobox-trigger"],
+[data-slot="search-field"] > div,
+[data-slot="number-field-group"] {
+  border-color: var(--chanwe-control-border);
+  border-radius: var(--cw-brand-radius-control);
+  box-shadow: none;
+}
+
+[data-slot="input"]:focus-within,
+[data-slot="input-group"]:focus-within,
+[data-slot="textarea"]:focus,
+[data-slot="select-trigger"]:focus-visible {
+  border-color: var(--cw-brand-primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--cw-brand-primary) 24%, transparent);
+}
+
+/* Tabs: the kit's underline segments; mono count chips stay as they are. */
+[data-slot="tabs-list"][data-variant="line"] {
+  border-color: var(--zen-border);
+}
+
+[data-slot="tabs-trigger"] {
+  color: var(--zen-fg-muted);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+[data-slot="tabs-trigger"]:hover,
+[data-slot="tabs-trigger"][data-selected],
+[data-slot="tabs-trigger"][aria-selected="true"] {
+  color: var(--zen-fg);
+}
+
+[data-slot="tabs-indicator"] {
+  background-color: var(--cw-brand-primary);
+}
+
+/* Default (boxed) tabs and toggle groups: the kit's box segments, ink when active. */
+[data-slot="tabs-list"][data-variant="default"] [data-slot="tabs-trigger"][aria-selected="true"],
+[data-slot="toggle-group-item"][data-pressed] {
+  background-color: var(--cw-brand-ink);
+  color: var(--cw-brand-pure-white);
+}
+
+/* Pills and badges: mono caps, 4px. */
+[data-slot="badge"],
+[data-slot="tag"] {
+  border-radius: var(--cw-brand-radius-control);
+  font: 500 11px / 1 var(--chanwe-font-mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ── 7. Data table ─────────────────────────────────────────────────────── */
+
+[data-slot="table-header"] > tr {
+  border-color: var(--zen-border-strong);
+}
+
+[data-slot="table-column"] {
+  color: var(--chanwe-fg-subtle);
+  font: 500 10px / 1.2 var(--chanwe-font-mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.chanwe-list-header > * {
+  color: var(--chanwe-fg-subtle);
+  font: 500 10px / 1.2 var(--chanwe-font-mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+[data-slot="table-column"] button {
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+}
+
+[data-slot="table-row"] {
+  border-color: var(--zen-border);
+  transition: background-color 0.15s;
+}
+
+[data-slot="table-body"] [data-slot="table-row"]:hover {
+  background-color: var(--chanwe-row-hover);
+}
+
+/* Link names in cells: no underline, ink, orange on hover. */
+[data-slot="table-cell"] a {
+  color: var(--zen-fg);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+[data-slot="table-cell"] a:hover {
+  color: var(--cw-brand-primary);
+}
+
+/* ── 8. KPI tiles and change pills ─────────────────────────────────────── */
+
+.chanwe-kpi {
+  gap: 10px;
+  padding: 16px 20px 20px;
+  border-color: var(--zen-border);
+  border-radius: var(--cw-brand-radius-card);
+}
+
+.chanwe-kpi .chanwe-kpi__label {
+  color: var(--chanwe-fg-subtle);
+  font: 500 10px / 1.2 var(--chanwe-font-mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.chanwe-kpi .chanwe-kpi__value {
+  font-family: var(--chanwe-font-display);
+  font-weight: 600;
+  font-size: clamp(28px, 2.4vw, 40px);
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.chanwe-change {
+  border-radius: var(--cw-brand-radius-control);
+  font: 500 11px / 1 var(--chanwe-font-mono);
+  letter-spacing: 0.06em;
+}
+
+.chanwe-change * {
+  font: inherit;
+}
+
+/* ── 9. Charts ─────────────────────────────────────────────────────────── */
+
+/* Chart.js draws on canvas with colours from src/lib/brand.ts; the legend is HTML. */
+[data-slot="tooltip-bubble"],
+[data-slot="tooltip"] {
+  border-radius: var(--cw-brand-radius-control);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-slot="table-row"],
+  [data-slot="button"][data-variant="primary"] {
+    transition: none;
+  }
+}

@@ -5,8 +5,6 @@ import {
   FormButtons,
   FormField,
   FormSubmitButton,
-  Heading,
-  Icon,
   Loading,
   PasswordField,
   Text,
@@ -14,8 +12,8 @@ import {
 } from '@umami/react-zen';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
+import { ChanweBrand } from '@/components/common/ChanweBrand';
 import { useConfig, useMessages, useUpdateQuery } from '@/components/hooks';
-import { Logo } from '@/components/svg';
 import { setClientAuthToken } from '@/lib/client';
 import { consumeReturnUrl } from '@/lib/return-url';
 import { setUser } from '@/store/app';
@@ -63,10 +61,7 @@ export function LoginForm() {
 
   return (
     <Column justifyContent="center" alignItems="center" gap="6">
-      <Icon size="lg">
-        <Logo />
-      </Icon>
-      <Heading>umami</Heading>
+      <ChanweBrand />
       {oidcEnabled && (
         <Column alignItems="center" gap="4">
           {ssoOnly && <Text>Redirecting to your identity provider…</Text>}

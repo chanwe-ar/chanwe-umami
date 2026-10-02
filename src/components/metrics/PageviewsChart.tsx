@@ -63,8 +63,8 @@ export function PageviewsChart({ data, unit, minDate, maxDate, ...props }: Pagev
                   dateLocale,
                 ),
                 borderWidth: 2,
-                backgroundColor: '#8601B0',
-                borderColor: '#8601B0',
+                backgroundColor: colors.theme.compareViews,
+                borderColor: colors.theme.compareViews,
                 order: 1,
               },
               {
@@ -72,8 +72,8 @@ export function PageviewsChart({ data, unit, minDate, maxDate, ...props }: Pagev
                 label: `${t(labels.visitors)} (${t(labels.previous)})`,
                 data: generateTimeSeries(data.compare.sessions, minDate, maxDate, unit, dateLocale),
                 borderWidth: 2,
-                backgroundColor: '#f15bb5',
-                borderColor: '#f15bb5',
+                backgroundColor: colors.theme.compareVisitors,
+                borderColor: colors.theme.compareVisitors,
                 order: 2,
               },
             ]

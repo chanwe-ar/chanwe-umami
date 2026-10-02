@@ -1,4 +1,5 @@
 import { describe, expect, test } from 'vitest';
+import { BRAND } from './brand';
 import { getColor, getThemeColors, hex2RGB, hex6, rgb2Hex } from './colors';
 
 describe('hex6', () => {
@@ -56,14 +57,14 @@ describe('getThemeColors', () => {
   test('builds a color structure for the light theme', () => {
     const result = getThemeColors('light');
 
-    expect(result.colors.theme).toMatchObject({ primary: '#2680eb' });
-    expect(result.colors.map.baseColor).toBe('#2680eb');
+    expect(result.colors.theme).toMatchObject({ primary: BRAND.primary });
+    expect(result.colors.map.baseColor).toBe(BRAND.primary);
     expect(result.colors.chart.views.backgroundColor).toContain('rgba');
     expect(result.colors.chart.text).toBeDefined();
   });
 
   test('builds a color structure for the dark theme', () => {
     const result = getThemeColors('dark');
-    expect(result.colors.theme).toMatchObject({ fill: '#191919' });
+    expect(result.colors.theme).toMatchObject({ fill: BRAND['ink-light'] });
   });
 });
