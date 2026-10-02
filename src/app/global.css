@@ -1,5 +1,6 @@
 :root {
-  --zen-font-family: var(--font-inter), sans-serif;
+  /* CHANWE body stack: Satoshi (next/font/local, layout.tsx), Inter kept as fallback. */
+  --zen-font-family: var(--font-satoshi), "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
 }
 
 /* Preserve the brand accent when Zen applies its light or dark theme tokens. */
