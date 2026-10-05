@@ -22,7 +22,6 @@ import {
   Globe,
   LifeBuoy,
   LockKeyhole,
-  LogOut,
   Moon,
   Settings,
   Sun,
@@ -99,16 +98,7 @@ export function UserButton({ showText = true, onClose }: UserButtonProps) {
         path: '/admin',
         icon: <LockKeyhole />,
       },
-    {
-      id: 'separator',
-      separator: true,
-    },
-    {
-      id: 'logout',
-      label: t(labels.logout),
-      path: getUrl('/logout'),
-      icon: <LogOut />,
-    },
+    // No logout: sessions belong to CHANWE Identity and end from Espacios.
   ].filter(Boolean);
 
   const trigger = (

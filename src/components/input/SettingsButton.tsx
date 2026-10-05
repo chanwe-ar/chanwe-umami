@@ -15,7 +15,6 @@ import {
   ExternalLink,
   LifeBuoy,
   LockKeyhole,
-  LogOut,
   Settings,
   UserCircle,
 } from '@/components/icons';
@@ -86,13 +85,7 @@ export function SettingsButton() {
                 />
               </>
             )}
-            <MenuSeparator />
-            <MenuItem
-              id="/logout"
-              icon={<LogOut />}
-              label={t(labels.logout)}
-              onAction={handleAction}
-            />
+            {/* No logout: sessions belong to CHANWE Identity and end from Espacios. */}
           </MenuSection>
         </Menu>
       </Popover>
