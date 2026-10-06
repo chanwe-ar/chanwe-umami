@@ -11,6 +11,9 @@ const RECORDER_PATH = '/recorder.js';
 const COLLECT_PATH = '/api/send';
 const LOGIN_PATH = '/login';
 const LOGIN_SSO_PATH = '/login/sso';
+// Espacios loads this in a hidden frame to sign Umami out (src/app/signout).
+const SIGNOUT_PATH = '/signout';
+const ESPACIOS_ORIGIN = 'https://espacios.chanwe.ar';
 const BASE_PATH = process.env.BASE_PATH || '';
 
 const apiHeaders = {
@@ -116,7 +119,12 @@ export default function middleware(req: NextRequest) {
 
   // Set the CSP here, not only at build time in next.config.ts, so
   // ALLOWED_FRAME_URLS is resolved from the runtime environment.
-  res.headers.set('Content-Security-Policy', contentSecurityPolicy);
+  res.headers.set(
+    'Content-Security-Policy',
+    matchesConfiguredPath(req.nextUrl.pathname, SIGNOUT_PATH, BASE_PATH)
+      ? contentSecurityPolicy.replace(/frame-ancestors[^;]*/, `frame-ancestors ${ESPACIOS_ORIGIN}`)
+      : contentSecurityPolicy,
+  );
 
   return res;
 }
