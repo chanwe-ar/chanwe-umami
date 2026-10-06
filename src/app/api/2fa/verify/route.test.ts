@@ -166,6 +166,7 @@ test('POST accepts a token-only payload and completes 2FA verification', async (
   expect(mocks.createSecureToken).toHaveBeenCalledWith(
     { userId: 'user-1', role: 'admin', pwd: 'pwd-fingerprint' },
     'app-secret',
+    { expiresIn: '7d' },
   );
   const data = await response.json();
   expect(data).toMatchObject({

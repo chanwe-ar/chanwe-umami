@@ -85,6 +85,14 @@ export async function checkAuth(request: Request) {
     return null;
   }
 
+  // Sessions last at most 7 days. Tokens minted before that rule carry no
+  // expiry and would otherwise never end, so they are refused: the person
+  // signs in once more and gets a 7-day token.
+  if (payload && typeof payload.exp !== 'number') {
+    log('Session token without expiry rejected');
+    return null;
+  }
+
   const shareToken = await parseShareToken(request);
 
   let user = null;
@@ -146,18 +154,18 @@ export async function checkAuth(request: Request) {
   };
 }
 
-export async function saveAuth(data: any, expire = 0) {
+/** Sessions last at most 7 days, like every CHANWE app. */
+export const SESSION_TTL_SECONDS = 7 * 24 * 60 * 60;
+
+export async function saveAuth(data: any, expire = SESSION_TTL_SECONDS) {
   const authKey = `auth:${createAuthKey()}`;
 
   if (redis.enabled) {
     await redis.client.set(authKey, data);
-
-    if (expire) {
-      await redis.client.expire(authKey, expire);
-    }
+    await redis.client.expire(authKey, expire);
   }
 
-  return createSecureToken({ authKey }, secret());
+  return createSecureToken({ authKey }, secret(), { expiresIn: expire });
 }
 
 export async function hasPermission(role: string, permission: string | string[]) {

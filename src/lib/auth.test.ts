@@ -30,6 +30,7 @@ vi.mock('@/lib/redis', () => ({
   },
 }));
 
+const EXP = Math.floor(Date.now() / 1000) + 3600;
 const parseSecureTokenMock = vi.mocked(parseSecureToken);
 const getUserMock = vi.mocked(getUser);
 const getApiKeyByHashMock = vi.mocked(getApiKeyByHash);
@@ -172,7 +173,7 @@ describe('checkAuth api keys', () => {
   });
 
   test('does not treat a jwt as an api key', async () => {
-    parseSecureTokenMock.mockReturnValue({ userId: 'user-1' } as any);
+    parseSecureTokenMock.mockReturnValue({ userId: 'user-1', exp: EXP } as any);
     mockUser();
 
     const result = await checkAuth(authedRequest());
@@ -220,9 +221,32 @@ describe('checkAuth 2FA partial token', () => {
   });
 });
 
+describe('checkAuth session expiry', () => {
+  test('rejects a session token minted without an expiry', async () => {
+    parseSecureTokenMock.mockReturnValue({ userId: 'user-1', pwd: hash(PASSWORD_HASH) } as any);
+    mockUser();
+
+    const result = await checkAuth(authedRequest());
+
+    expect(result).toBeNull();
+    expect(getUserMock).not.toHaveBeenCalled();
+  });
+
+  test('rejects a Redis session token minted without an expiry', async () => {
+    redisMock.enabled = true;
+    parseSecureTokenMock.mockReturnValue({ authKey: 'auth:session-key' } as any);
+    mockUser();
+
+    const result = await checkAuth(authedRequest());
+
+    expect(result).toBeNull();
+    expect(redisMock.client.get).not.toHaveBeenCalled();
+  });
+});
+
 describe('checkAuth password fingerprint', () => {
   test('authorizes a stateless token whose fingerprint matches the current password', async () => {
-    parseSecureTokenMock.mockReturnValue({ userId: 'user-1', pwd: hash(PASSWORD_HASH) } as any);
+    parseSecureTokenMock.mockReturnValue({ userId: 'user-1', pwd: hash(PASSWORD_HASH), exp: EXP } as any);
     mockUser();
 
     const result = await checkAuth(authedRequest());
@@ -231,7 +255,7 @@ describe('checkAuth password fingerprint', () => {
   });
 
   test('authorizes a legacy stateless token that does not include a password fingerprint', async () => {
-    parseSecureTokenMock.mockReturnValue({ userId: 'user-1' } as any);
+    parseSecureTokenMock.mockReturnValue({ userId: 'user-1', exp: EXP } as any);
     mockUser();
 
     const result = await checkAuth(authedRequest());
@@ -244,6 +268,7 @@ describe('checkAuth password fingerprint', () => {
     parseSecureTokenMock.mockReturnValue({
       userId: 'user-1',
       pwd: hash('old-password-hash'),
+      exp: EXP,
     } as any);
     mockUser();
 
@@ -253,7 +278,7 @@ describe('checkAuth password fingerprint', () => {
   });
 
   test('does not expose the password hash on the returned user', async () => {
-    parseSecureTokenMock.mockReturnValue({ userId: 'user-1', pwd: hash(PASSWORD_HASH) } as any);
+    parseSecureTokenMock.mockReturnValue({ userId: 'user-1', pwd: hash(PASSWORD_HASH), exp: EXP } as any);
     mockUser();
 
     const result = await checkAuth(authedRequest());
@@ -263,7 +288,7 @@ describe('checkAuth password fingerprint', () => {
 
   test('authorizes a Redis session whose fingerprint matches the current password', async () => {
     redisMock.enabled = true;
-    parseSecureTokenMock.mockReturnValue({ authKey: 'auth:session-key' } as any);
+    parseSecureTokenMock.mockReturnValue({ authKey: 'auth:session-key', exp: EXP } as any);
     redisMock.client.get.mockResolvedValue({ userId: 'user-1', pwd: hash(PASSWORD_HASH) });
     mockUser();
 
@@ -274,7 +299,7 @@ describe('checkAuth password fingerprint', () => {
 
   test('rejects a Redis session whose fingerprint predates a password change', async () => {
     redisMock.enabled = true;
-    parseSecureTokenMock.mockReturnValue({ authKey: 'auth:session-key' } as any);
+    parseSecureTokenMock.mockReturnValue({ authKey: 'auth:session-key', exp: EXP } as any);
     redisMock.client.get.mockResolvedValue({ userId: 'user-1', pwd: hash('old-password-hash') });
     mockUser();
 

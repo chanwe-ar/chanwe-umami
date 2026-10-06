@@ -47,3 +47,15 @@ describe('createSecureToken/parseSecureToken', () => {
     expect(parseSecureToken('garbage', SECRET)).toBeNull();
   });
 });
+
+describe('session expiry', () => {
+  test('a 7-day session token carries a 7-day expiry and is rejected after it', () => {
+    const token = createSecureToken({ userId: '789' }, SECRET, { expiresIn: '7d' });
+    const parsed = parseSecureToken(token, SECRET) as any;
+
+    expect(parsed.exp - parsed.iat).toBe(7 * 24 * 60 * 60);
+
+    const expired = createSecureToken({ userId: '789', exp: Math.floor(Date.now() / 1000) - 1 }, SECRET);
+    expect(parseSecureToken(expired, SECRET)).toBeNull();
+  });
+});

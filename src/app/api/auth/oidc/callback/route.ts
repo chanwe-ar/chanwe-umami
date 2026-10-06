@@ -124,7 +124,10 @@ export async function GET(request: NextRequest) {
     if (redis.enabled) {
       token = await saveAuth({ userId: id, role: resolvedRole, pwd });
     } else {
-      token = createSecureToken({ userId: user.id, role: resolvedRole, pwd }, secret());
+      // Sessions last at most 7 days, like every CHANWE app.
+      token = createSecureToken({ userId: user.id, role: resolvedRole, pwd }, secret(), {
+        expiresIn: '7d',
+      });
     }
 
     return ssoRedirect(request, {}, `token=${encodeURIComponent(token)}`);
