@@ -269,28 +269,50 @@ h6,
   border: 0;
   border-radius: 0;
   background-color: var(--chanwe-rail-bg);
+  /* The kit's faint dot field on obsidian (effects.css .cw-dot-field--ink). */
+  background-image: radial-gradient(rgba(248, 250, 252, 0.055) 1px, transparent 1px);
+  background-size: 16px 16px;
   color: var(--chanwe-rail-fg);
 }
 
-/* Brand row: as tall as the bar beside it, so the two rules meet. */
-.chanwe-sidenav > :first-child {
-  min-height: var(--chanwe-header-height);
-  margin: 0 -12px 16px;
-  padding: 0 12px;
-  border-bottom: 1px solid var(--chanwe-rail-rule);
+/* Head: the nav starts the bar's height plus 28px down, under its section
+   label, as .cw-sidebar__nav and .cw-sidebar__group-label do. */
+.chanwe-sidenav__head {
+  padding: calc(var(--chanwe-header-height) + 28px) 12px 10px;
 }
 
-.chanwe-sidenav > :first-child > div {
-  gap: 12px;
-  padding: 0 0 0 12px;
+.chanwe-sidenav__label {
+  display: block;
+  overflow: hidden;
+  color: var(--chanwe-rail-label);
+  font: 600 10px / 1 var(--chanwe-font-body);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  white-space: nowrap;
 }
 
-.chanwe-sidenav[data-collapsed] > :first-child > div {
-  padding: 0;
+/* Fold toggle: the kit's white square on the rail's edge (.cw-sidebar__toggle). */
+.chanwe-rail-toggle {
+  position: absolute !important;
+  top: calc(var(--chanwe-header-height) + 20px);
+  right: -14px;
+  width: 28px;
+  height: 28px;
+  min-height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 !important;
+  border: 1px solid var(--cw-brand-rule) !important;
+  border-radius: 4px !important;
+  background: var(--cw-brand-pure-white) !important;
+  color: var(--cw-brand-body-fg);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
 }
 
-.chanwe-sidenav .chanwe-brand__logo {
-  width: 80px;
+.chanwe-rail-toggle:hover {
+  border-color: var(--cw-brand-primary) !important;
+  color: var(--cw-brand-primary);
 }
 
 .chanwe-sidenav a {
@@ -343,15 +365,113 @@ h6,
   border-top: 1px solid var(--chanwe-rail-rule);
 }
 
-/* Top bar: 56px, white, one rule, no fade. */
+/* Top bar: the kit's .cw-top-bar. 56px, white, one rule: product and the
+   pickers on the left, the wordmark centred, actions on the right, and the
+   scan line along the rule. */
 .chanwe-topbar {
+  display: grid !important;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 24px;
+  height: var(--chanwe-header-height);
   min-height: var(--chanwe-header-height);
+  padding: 0 24px !important;
   border-bottom: 1px solid var(--zen-border);
   background-color: var(--chanwe-bar-bg);
 }
 
-.chanwe-topbar > div:last-child:not(:first-child) {
-  display: none;
+.chanwe-topbar__start {
+  grid-column: 1;
+  min-width: 0;
+  gap: 12px;
+}
+
+.chanwe-topbar__product {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  flex: none;
+}
+
+.chanwe-topbar__product > span {
+  color: var(--cw-brand-primary);
+  font: 600 10px / 1 var(--chanwe-font-body);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.chanwe-topbar__product > i {
+  width: 1px;
+  height: 12px;
+  background: var(--zen-border);
+}
+
+.chanwe-topbar__logo {
+  grid-column: 2;
+  justify-self: center;
+  display: flex;
+}
+
+.chanwe-topbar__logo .chanwe-brand__logo {
+  width: 104px;
+}
+
+.chanwe-topbar__actions {
+  grid-column: 3;
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.chanwe-topbar__action {
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  color: var(--cw-brand-fg-subtle);
+  transition:
+    color 0.2s,
+    background-color 0.2s;
+}
+
+.chanwe-topbar__action:hover {
+  color: var(--cw-brand-ink);
+  background: var(--cw-brand-surface-sunken);
+}
+
+/* The kit's scan line (effects.css .cw-scan-line), along the bar's rule. */
+.chanwe-scan-line {
+  position: absolute;
+  inset: auto 0 -1px;
+  z-index: 1;
+  height: 1px;
+  overflow: hidden;
+  pointer-events: none;
+  background: color-mix(in srgb, var(--cw-brand-primary) 32%, transparent);
+}
+
+.chanwe-scan-line::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: min(68vw, 760px);
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, color-mix(in srgb, var(--cw-brand-primary) 45%, transparent) 12%, var(--cw-brand-primary) 50%, color-mix(in srgb, var(--cw-brand-primary) 45%, transparent) 88%, transparent 100%);
+  animation: chanwe-scan-line 5.5s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+}
+
+@keyframes chanwe-scan-line {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(100vw); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chanwe-scan-line::after { animation: none; }
 }
 
 /* Phone bar: the kit's 56px mobile bar, flat, edge to edge, one rule. */

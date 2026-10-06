@@ -7,6 +7,18 @@ import { LinkSelect } from '@/components/input/LinkSelect';
 import { PixelSelect } from '@/components/input/PixelSelect';
 import { TeamsButton } from '@/components/input/TeamsButton';
 import { WebsiteSelect } from '@/components/input/WebsiteSelect';
+import { ChanweBrand } from '@/components/common/ChanweBrand';
+
+/** The Espacios glyph (chanwe-ui brand/app-icons/svg/espacios-glyph.svg). */
+const EspaciosGlyph = () => (
+  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" aria-hidden="true">
+    <rect x="2.5" y="2.5" width="19" height="19" rx="5.5" strokeWidth="1.6" />
+    <rect x="7" y="7" width="4.4" height="4.4" rx="1.2" fill="currentColor" stroke="none" />
+    <rect x="13.35" y="7.6" width="3.3" height="3.3" rx="0.9" strokeWidth="1.2" />
+    <rect x="7.6" y="13.35" width="3.3" height="3.3" rx="0.9" strokeWidth="1.2" />
+    <rect x="13.35" y="13.35" width="3.3" height="3.3" rx="0.9" strokeWidth="1.2" />
+  </svg>
+);
 
 export function TopNav() {
   const { websiteId, linkId, pixelId, boardId, teamId, router, renderUrl } = useNavigation();
@@ -49,7 +61,11 @@ export function TopNav() {
       zIndex={100}
       backgroundColor="surface-raised"
     >
-      <Row alignItems="center">
+      <Row alignItems="center" className="chanwe-topbar__start">
+        <span className="chanwe-topbar__product">
+          <span>Analytics</span>
+          <i aria-hidden="true" />
+        </span>
         <TeamsButton />
         {(websiteId || linkId || pixelId || boardId) && (
           <>
@@ -105,17 +121,20 @@ export function TopNav() {
           </>
         )}
       </Row>
-      <div
-        style={{
-          position: 'absolute',
-          bottom: -16,
-          left: 0,
-          right: 0,
-          height: 16,
-          background: 'linear-gradient(to bottom, var(--zen-surface-raised), transparent)',
-          pointerEvents: 'none',
-        }}
-      />
+      <span className="chanwe-topbar__logo">
+        <ChanweBrand product={false} />
+      </span>
+      <span className="chanwe-topbar__actions">
+        <a
+          className="chanwe-topbar__action"
+          href="https://espacios.chanwe.ar/"
+          aria-label="Volver a CHANWE Espacios"
+          title="Volver a CHANWE Espacios"
+        >
+          <EspaciosGlyph />
+        </a>
+      </span>
+      <span className="chanwe-scan-line" aria-hidden="true" />
     </Row>
   );
 }

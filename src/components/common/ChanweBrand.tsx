@@ -2,7 +2,8 @@
 // SVGs are copies of chanwe-ui brand/logos (brand-sync keeps them current).
 // tone "auto" draws the ink wordmark and swaps to white on the dark theme;
 // tone "inverse" is for dark surfaces such as the sidebar rail.
-export function ChanweBrand({ tone = 'auto' }: { tone?: 'auto' | 'inverse' }) {
+// product={false} draws the wordmark alone (the top bar's centre).
+export function ChanweBrand({ tone = 'auto', product = true }: { tone?: 'auto' | 'inverse'; product?: boolean }) {
   const base = `${process.env.basePath || ''}/brand/logos`;
 
   return (
@@ -21,8 +22,12 @@ export function ChanweBrand({ tone = 'auto' }: { tone?: 'auto' | 'inverse' }) {
         width={88}
         height={18}
       />
-      <i aria-hidden="true" />
-      <span className="chanwe-brand__product">Analytics</span>
+      {product && (
+        <>
+          <i aria-hidden="true" />
+          <span className="chanwe-brand__product">Analytics</span>
+        </>
+      )}
     </span>
   );
 }

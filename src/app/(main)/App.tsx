@@ -3,7 +3,7 @@ import { Column, Grid, Loading, Row } from '@umami/react-zen';
 import Script from 'next/script';
 import { useEffect } from 'react';
 import { MobileNav } from '@/app/(main)/MobileNav';
-import { SideNav } from '@/app/(main)/SideNav';
+import { PanelButton, SideNav } from '@/app/(main)/SideNav';
 import { TopNav } from '@/app/(main)/TopNav';
 import {
   useConfig,
@@ -70,8 +70,13 @@ export function App({ children }) {
       <Row display={{ base: 'flex', lg: 'none' }} alignItems="center" gap padding="3">
         <MobileNav />
       </Row>
-      <Column display={{ base: 'none', lg: 'flex' }} minHeight="0" style={{ overflow: 'hidden' }}>
+      <Column
+        display={{ base: 'none', lg: 'flex' }}
+        minHeight="0"
+        style={{ overflow: 'visible', position: 'relative', zIndex: 110 }}
+      >
         <SideNav />
+        <PanelButton />
       </Column>
       <Column overflowX="hidden" minHeight="0" position="relative">
         <TopNav />

@@ -10,7 +10,6 @@ import {
 import { AdminNav } from '@/app/(main)/admin/AdminNav';
 import { SettingsNav } from '@/app/(main)/settings/SettingsNav';
 import { WebsiteNav } from '@/app/(main)/websites/[websiteId]/WebsiteNav';
-import { ChanweBrand } from '@/components/common/ChanweBrand';
 import { IconLabel } from '@/components/common/IconLabel';
 import Link from '@/components/common/Link';
 import { OverlayScrollArea } from '@/components/common/OverlayScrollArea';
@@ -21,7 +20,8 @@ import {
   Grid2x2,
   LayoutDashboard,
   LinkIcon,
-  PanelLeft,
+  ChevronLeft,
+  ChevronRight,
   PanelsLeftBottom,
 } from '@/components/icons';
 import { UserButton } from '@/components/input/UserButton';
@@ -87,22 +87,9 @@ export function SideNav(props: any) {
         overflow: 'hidden',
       }}
     >
-      <Row
-        alignItems="center"
-        justifyContent="space-between"
-        minHeight="9"
-        style={{ flexShrink: 0 }}
-      >
-        <Row
-          padding="3"
-          alignItems="center"
-          justifyContent={isCollapsed ? 'center' : 'space-between'}
-          flexGrow="1"
-        >
-          {!isCollapsed && <ChanweBrand tone="inverse" />}
-          <PanelButton />
-        </Row>
-      </Row>
+      <div className="chanwe-sidenav__head" style={{ flexShrink: 0 }}>
+        {!isCollapsed && <span className="chanwe-sidenav__label">Secciones</span>}
+      </div>
       <OverlayScrollArea
         className={isCollapsed ? styles.collapsed : undefined}
         style={{ flexGrow: 1, minHeight: 0 }}
@@ -163,18 +150,18 @@ export function SideNav(props: any) {
   );
 }
 
-const PanelButton = (props: ButtonProps) => {
+/** The kit's fold toggle: a white square on the rail's edge (App places it). */
+export const PanelButton = (props: ButtonProps) => {
   const [isCollapsed, setIsCollapsed] = useGlobalState('sidenav-collapsed', false);
   return (
     <Button
       onPress={() => setIsCollapsed(!isCollapsed)}
       variant="zero"
+      aria-label={isCollapsed ? 'Expandir menú' : 'Contraer menú'}
+      className="chanwe-rail-toggle"
       {...props}
-      style={{ padding: 0 }}
     >
-      <Icon strokeColor="muted">
-        <PanelLeft />
-      </Icon>
+      <Icon size="sm">{isCollapsed ? <ChevronRight /> : <ChevronLeft />}</Icon>
     </Button>
   );
 };
