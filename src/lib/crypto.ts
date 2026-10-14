@@ -20,7 +20,7 @@ export function encrypt(value: any, secret: any) {
   const salt = crypto.randomBytes(SALT_LENGTH);
   const key = getKey(secret, salt);
 
-  const cipher = crypto.createCipheriv(ALGORITHM, key, iv);
+  const cipher = crypto.createCipheriv(ALGORITHM, key, iv, { authTagLength: TAG_LENGTH });
 
   const encrypted = Buffer.concat([cipher.update(String(value), 'utf8'), cipher.final()]);
 
@@ -36,9 +36,14 @@ export function decrypt(value: any, secret: any) {
   const tag = str.subarray(TAG_POSITION, ENC_POSITION);
   const encrypted = str.subarray(ENC_POSITION);
 
+  // Node would otherwise accept a tag as short as 4 bytes, making a forgery far easier.
+  if (tag.length !== TAG_LENGTH) {
+    throw new Error('Invalid encrypted value.');
+  }
+
   const key = getKey(secret, salt);
 
-  const decipher = crypto.createDecipheriv(ALGORITHM, key, iv);
+  const decipher = crypto.createDecipheriv(ALGORITHM, key, iv, { authTagLength: TAG_LENGTH });
 
   decipher.setAuthTag(tag);
 

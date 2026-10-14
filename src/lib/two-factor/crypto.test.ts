@@ -41,6 +41,20 @@ describe('encryptSecret/decryptSecret', () => {
     vi.unstubAllEnvs();
   });
 
+  test('rejects a stored secret whose GCM tag was truncated to 4 bytes', async () => {
+    vi.stubEnv('TWO_FACTOR_ENCRYPTION_KEY', KEY);
+    vi.resetModules();
+    const { encryptSecret, decryptSecret } = await import('./crypto');
+
+    const [ciphertext, iv, tag] = encryptSecret('secret').split(':');
+
+    expect(() => decryptSecret(`${ciphertext}:${iv}:${tag.slice(0, 8)}`)).toThrow(
+      'Invalid encrypted two-factor secret.',
+    );
+
+    vi.unstubAllEnvs();
+  });
+
   test('throws when the encryption key is missing or invalid', async () => {
     vi.stubEnv('TWO_FACTOR_ENCRYPTION_KEY', 'too-short');
     vi.resetModules();
