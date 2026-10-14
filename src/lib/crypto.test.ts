@@ -18,6 +18,15 @@ describe('encrypt/decrypt', () => {
     expect(encrypt('same', secret)).not.toBe(encrypt('same', secret));
   });
 
+  test('rejects a value whose GCM tag was truncated to 4 bytes', () => {
+    const secret = 'my-secret';
+    const buf = Buffer.from(encrypt('secret data', secret), 'base64');
+    // salt (64) + iv (16) + the first 4 bytes of the tag, nothing after.
+    const truncated = buf.subarray(0, 64 + 16 + 4).toString('base64');
+
+    expect(() => decrypt(truncated, secret)).toThrow('Invalid encrypted value.');
+  });
+
   test('fails to decrypt with the wrong secret', () => {
     const encrypted = encrypt('secret data', 'right-secret');
 
