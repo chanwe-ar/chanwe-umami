@@ -42,6 +42,8 @@ pnpm install
 
 ### Configure Umami
 
+CHANWE's deployment: the variables it sets are listed in `.env.chanwe.example`.
+
 Create an `.env` file with the following:
 
 ```bash
