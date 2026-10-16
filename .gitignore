@@ -59,3 +59,13 @@ yarn-error.log*
 
 # api integration test runtime state
 /tests/api/.runtime
+
+# Local environment files; only the reviewed example templates are versioned.
+.env
+.env.*
+!/.env.build.example
+!/.env.chanwe.example
+!/.env.ci.example
+!/.env.example
+!/.env.system.example
+!/.env.tools.example
