@@ -1,8 +1,7 @@
 'use client';
 import { useTheme } from '@umami/react-zen';
 import { useEffect, useRef } from 'react';
-import { useLocale } from '@/components/hooks';
-import { UserButton } from '@/components/input/UserButton';
+import { useLocale, useLoginQuery } from '@/components/hooks';
 
 declare global {
   interface Window {
@@ -13,6 +12,7 @@ declare global {
   }
 }
 export function ChanweWebNavigation() {
+  const { user } = useLoginQuery();
   const ref = useRef<HTMLSpanElement>(null);
   const { locale, saveLocale } = useLocale();
   const { theme, setTheme } = useTheme();
@@ -29,7 +29,7 @@ export function ChanweWebNavigation() {
       if (disposed || !ref.current) return;
       destroy = window.ChanweWebNavigation?.mount(ref.current, {
         locale,
-        avatar: false,
+        accountHref: user?.isAdmin ? '/admin' : undefined,
         getTheme: () => current.current.theme,
         onTheme: () =>
           current.current.setTheme(current.current.theme === 'dark' ? 'light' : 'dark'),
@@ -46,13 +46,6 @@ export function ChanweWebNavigation() {
       disposed = true;
       destroy?.();
     };
-  }, [locale]);
-  return (
-    <>
-      <span ref={ref} />
-      <span className="chanwe-topbar__action">
-        <UserButton showText={false} utilities={false} />
-      </span>
-    </>
-  );
+  }, [locale, user?.isAdmin]);
+  return <span ref={ref} />;
 }

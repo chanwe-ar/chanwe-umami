@@ -9,7 +9,7 @@
   };
   const PATHS = {
     grid: '<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>',
-    more: '<circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/>',
+    more: '<path d="M4 7h16M4 12h16M4 17h16"/>',
     help: '<circle cx="12" cy="12" r="9"/><path d="M9 9a3 3 0 0 1 6 0c0 2-3 2-3 5M12 17h.01"/>',
     theme: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2"/>',
     globe: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c5 5 5 13 0 18-5-5-5-13 0-18Z"/>',
@@ -26,6 +26,7 @@
     if (!container || window.__CHANWE_DESKTOP__) return () => {};
     const locale = String(options.locale || document.documentElement.lang || 'es').split(/[-_]/)[0];
     const text = COPY[locale] || COPY.es;
+    const accountText = ({ es: ['Mis datos', 'Roles y accesos', 'Roles', 'Aplicaciones', 'Ir al perfil', 'Cargando…', 'Abrí tu perfil para iniciar sesión y consultar tus datos.', 'Sin datos', 'Preferencias de esta aplicación'], en: ['My details', 'Roles and access', 'Roles', 'Apps', 'Go to profile', 'Loading…', 'Open your profile to sign in and view your details.', 'No details', 'App preferences'], it: ['I miei dati', 'Ruoli e accessi', 'Ruoli', 'Applicazioni', 'Vai al profilo', 'Caricamento…', 'Apri il profilo per accedere e vedere i tuoi dati.', 'Nessun dato', 'Preferenze applicazione'], pt: ['Meus dados', 'Funções e acessos', 'Funções', 'Aplicativos', 'Ir ao perfil', 'Carregando…', 'Abra seu perfil para entrar e consultar seus dados.', 'Sem dados', 'Preferências do aplicativo'] })[locale] || ['My details', 'Roles and access', 'Roles', 'Apps', 'Go to profile', 'Loading…', 'Open your profile to sign in and view your details.', 'No details', 'App preferences'];
     const root = document.createElement('span'); root.className = 'cw-native-navigation';
     const control = (label, glyph, href) => {
       const node = document.createElement(href ? 'a' : 'button');
@@ -64,7 +65,7 @@
     trigger.addEventListener('click', () => panel ? close() : open());
     const outside = event => { if (!root.contains(event.target)) close(); };
     const keys = event => {
-      if (!root.contains(document.activeElement)) return;
+      if (!root.contains(document.activeElement) || accountPanel) return;
       if (event.key === 'Escape') { event.preventDefault(); close(true); }
       if (event.key === 'Tab') close();
       if (!['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)) return;
@@ -73,9 +74,35 @@
       items[event.key === 'Home' ? 0 : event.key === 'End' ? items.length - 1 : (at + (event.key === 'ArrowDown' ? 1 : -1) + items.length) % items.length]?.focus();
     };
     root.append(grid, menuRoot);
-    if (options.avatar !== false) root.append(control(options.accountLabel || text[7], 'user', options.profileHref || 'https://espacios.chanwe.ar/?tab=profile'));
+    let accountPanel = null, accountData = null, loading = true;
+    const controller = new AbortController();
+    const accountRoot = document.createElement('span'); accountRoot.className = 'cw-web-account';
+    const avatar = control(text[7], 'user'); avatar.classList.add('cw-web-profile'); avatar.setAttribute('aria-haspopup', 'dialog'); avatar.setAttribute('aria-expanded', 'false');
+    const closeAccount = (focus) => { accountPanel?.remove(); accountPanel = null; avatar.setAttribute('aria-expanded', 'false'); if (focus) avatar.focus(); };
+    const appendText = (parent, tag, value) => { const node = document.createElement(tag); node.textContent = value; parent.append(node); return node; };
+    const drawAccount = () => {
+      accountPanel.replaceChildren(); appendText(accountPanel, 'strong', text[7]);
+      if (loading) appendText(accountPanel, 'p', accountText[5]).setAttribute('role', 'status');
+      else if (!accountData) appendText(accountPanel, 'p', accountText[6]);
+      else {
+        const details = document.createElement('section'); accountPanel.append(details);
+        appendText(details, 'h3', accountText[0]); appendText(details, 'strong', accountData.name || accountData.email || ''); appendText(details, 'p', accountData.email || ''); appendText(details, 'p', [accountData.jobTitle, accountData.department, accountData.company].filter(Boolean).join(' · '));
+        const access = document.createElement('section'); accountPanel.append(access); appendText(access, 'h3', accountText[1]);
+        for (const [label, values] of [[accountText[2], accountData.roles], [accountText[3], accountData.access]]) { appendText(access, 'h4', label); const list = document.createElement('ul'); access.append(list); for (const value of Array.isArray(values) && values.length ? values : [accountText[7]]) appendText(list, 'li', String(value)); }
+      }
+      if (options.accountHref) { const native = appendText(accountPanel, 'a', accountText[8]); native.href = options.accountHref; }
+      const link = appendText(accountPanel, 'a', accountText[4]); link.href = 'https://espacios.chanwe.ar/?tab=profile'; link.className = 'cw-web-account__link';
+    };
+    const accountKeys = event => { if (event.key === 'Escape' && accountPanel) { event.preventDefault(); event.stopImmediatePropagation(); closeAccount(true); } };
+    const accountOutside = event => { if (!accountRoot.contains(event.target)) closeAccount(); };
+    if (options.avatar !== false) {
+      accountRoot.append(avatar); root.append(accountRoot);
+      avatar.addEventListener('click', () => { if (accountPanel) { closeAccount(); return; } close(); accountPanel = document.createElement('div'); accountPanel.className = 'cw-web-account__panel'; accountPanel.setAttribute('role', 'dialog'); accountPanel.setAttribute('aria-label', text[7]); accountRoot.append(accountPanel); avatar.setAttribute('aria-expanded', 'true'); drawAccount(); accountPanel.querySelector('a')?.focus(); });
+      document.addEventListener('keydown', accountKeys); document.addEventListener('pointerdown', accountOutside);
+      fetch('https://espacios.chanwe.ar/api/navigation-profile', { credentials: 'include', cache: 'no-store', signal: controller.signal }).then(response => { if (!response.ok) throw new Error('profile'); return response.json(); }).then(data => { accountData = data; if (typeof data.photo === 'string' && data.photo.startsWith('data:image/png;base64,')) { const image = document.createElement('img'); image.src = data.photo; image.alt = ''; image.addEventListener('error', () => avatar.replaceChildren(icon('user'))); avatar.replaceChildren(image); } }).catch(() => {}).finally(() => { loading = false; if (accountPanel) drawAccount(); });
+    }
     container.append(root); document.addEventListener('pointerdown', outside); document.addEventListener('keydown', keys);
-    return () => { close(); root.remove(); document.removeEventListener('pointerdown', outside); document.removeEventListener('keydown', keys); };
+    return () => { controller.abort(); closeAccount(); document.removeEventListener('keydown', accountKeys); document.removeEventListener('pointerdown', accountOutside); close(); root.remove(); document.removeEventListener('pointerdown', outside); document.removeEventListener('keydown', keys); };
   }
   window.ChanweWebNavigation = Object.freeze({ mount });
 })();

@@ -7,6 +7,21 @@ beforeAll(async () => {
 });
 beforeEach(() => {
   document.body.innerHTML = '';
+  vi.stubGlobal(
+    'fetch',
+    vi
+      .fn()
+      .mockResolvedValue(
+        Response.json({
+          name: 'Ana',
+          email: 'ana@example.test',
+          photo: 'data:image/png;base64,YWJj',
+          jobTitle: 'Consultant',
+          roles: ['Consultant'],
+          access: ['Calendar'],
+        }),
+      ),
+  );
   delete window.__CHANWE_DESKTOP__;
 });
 function mount(extra: Record<string, unknown> = {}) {
@@ -30,7 +45,7 @@ test('the app grid and avatar stay visible while utilities live under one trigge
     'href',
     'https://espacios.chanwe.ar/',
   );
-  expect(getByRole(host, 'link', { name: 'Account' })).toBeVisible();
+  expect(getByRole(host, 'button', { name: 'Account' })).toBeVisible();
   expect(queryByRole(host, 'menu')).not.toBeInTheDocument();
   await user.click(getByRole(host, 'button', { name: 'Options' }));
   expect(getAllByRole(host, 'menuitem')).toHaveLength(4);
@@ -62,5 +77,23 @@ test('desktop does not mount or replace native controls', () => {
   window.__CHANWE_DESKTOP__ = { engine: 'electron' };
   const { host, destroy } = mount();
   expect(host).toBeEmptyDOMElement();
+  destroy();
+});
+
+test('account preview uses the photo and self summary, then links to Espacios Cuenta', async () => {
+  const { host, destroy, user } = mount();
+  await user.click(getByRole(host, 'button', { name: 'Account' }));
+  const dialog = getByRole(host, 'dialog', { name: 'Account' });
+  expect(dialog).toHaveTextContent('ana@example.test');
+  expect(dialog).toHaveTextContent('Consultant');
+  expect(dialog).toHaveTextContent('Calendar');
+  expect(getByRole(dialog, 'link', { name: 'Go to profile' })).toHaveAttribute(
+    'href',
+    'https://espacios.chanwe.ar/?tab=profile',
+  );
+  expect(host.querySelector('img')).toHaveAttribute('src', 'data:image/png;base64,YWJj');
+  await user.keyboard('{Escape}');
+  expect(queryByRole(host, 'dialog')).not.toBeInTheDocument();
+  expect(getByRole(host, 'button', { name: 'Account' })).toHaveFocus();
   destroy();
 });
