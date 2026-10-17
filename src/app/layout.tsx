@@ -9,6 +9,7 @@ import '@umami/react-zen/styles.full.css';
 import './global.css';
 // CHANWE theme layer: loaded last so it overrides Zen's variables (see the file header).
 import './chanwe-theme.css';
+import './chanwe-web-navigation.css';
 
 // CHANWE body face: the static Satoshi cuts from chanwe-ui/brand/fonts/web,
 // self-hosted by next/font (no build-time Google Fonts fetch). Weights the

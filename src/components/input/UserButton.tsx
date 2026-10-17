@@ -33,10 +33,11 @@ import { languages } from '@/lib/lang';
 
 export interface UserButtonProps {
   showText?: boolean;
+  utilities?: boolean;
   onClose?: () => void;
 }
 
-export function UserButton({ showText = true, onClose }: UserButtonProps) {
+export function UserButton({ showText = true, utilities = true, onClose }: UserButtonProps) {
   const { user } = useLoginQuery();
   const { cloudMode } = useConfig();
   const { t, labels } = useMessages();
@@ -146,63 +147,67 @@ export function UserButton({ showText = true, onClose }: UserButtonProps) {
                 <Text>{t(labels.settings)}</Text>
               </Row>
             </MenuItem>
-            <SubmenuTrigger>
-              <MenuItem id="language" showSubMenuIcon>
-                <Row alignItems="center" gap>
-                  <Icon>
-                    <Globe />
-                  </Icon>
-                  <Text>{t(labels.language)}</Text>
-                </Row>
-              </MenuItem>
-              <Popover
-                side={isMobile ? 'bottom' : 'right'}
-                align={isMobile ? 'start' : 'end'}
-                isNonModal
-              >
-                <Menu
-                  selectionMode="single"
-                  selectedKeys={new Set([locale])}
-                  style={{ maxHeight: 300, overflow: 'auto' }}
-                >
-                  {languageItems.map(({ value, label }) => (
-                    <MenuItem key={value} id={value} onAction={() => handleSelectLocale(value)}>
-                      <Text weight={value === locale ? 'bold' : undefined}>{label}</Text>
-                    </MenuItem>
-                  ))}
-                </Menu>
-              </Popover>
-            </SubmenuTrigger>
-            <SubmenuTrigger>
-              <MenuItem id="theme" showSubMenuIcon>
-                <Row alignItems="center" gap>
-                  <Icon>
-                    <SunMoon />
-                  </Icon>
-                  <Text>{t(labels.theme)}</Text>
-                </Row>
-              </MenuItem>
-              <Popover
-                side={isMobile ? 'bottom' : 'right'}
-                align={isMobile ? 'start' : 'end'}
-                isNonModal
-              >
-                <Menu selectionMode="single" selectedKeys={new Set([theme])}>
-                  <MenuItem id="light" onAction={() => handleSelectTheme('light')}>
-                    <Icon>
-                      <Sun />
-                    </Icon>
-                    <Text weight={theme === 'light' ? 'bold' : undefined}>Light</Text>
+            {utilities ? (
+              <>
+                <SubmenuTrigger>
+                  <MenuItem id="language" showSubMenuIcon>
+                    <Row alignItems="center" gap>
+                      <Icon>
+                        <Globe />
+                      </Icon>
+                      <Text>{t(labels.language)}</Text>
+                    </Row>
                   </MenuItem>
-                  <MenuItem id="dark" onAction={() => handleSelectTheme('dark')}>
-                    <Icon>
-                      <Moon />
-                    </Icon>
-                    <Text weight={theme === 'dark' ? 'bold' : undefined}>Dark</Text>
+                  <Popover
+                    side={isMobile ? 'bottom' : 'right'}
+                    align={isMobile ? 'start' : 'end'}
+                    isNonModal
+                  >
+                    <Menu
+                      selectionMode="single"
+                      selectedKeys={new Set([locale])}
+                      style={{ maxHeight: 300, overflow: 'auto' }}
+                    >
+                      {languageItems.map(({ value, label }) => (
+                        <MenuItem key={value} id={value} onAction={() => handleSelectLocale(value)}>
+                          <Text weight={value === locale ? 'bold' : undefined}>{label}</Text>
+                        </MenuItem>
+                      ))}
+                    </Menu>
+                  </Popover>
+                </SubmenuTrigger>
+                <SubmenuTrigger>
+                  <MenuItem id="theme" showSubMenuIcon>
+                    <Row alignItems="center" gap>
+                      <Icon>
+                        <SunMoon />
+                      </Icon>
+                      <Text>{t(labels.theme)}</Text>
+                    </Row>
                   </MenuItem>
-                </Menu>
-              </Popover>
-            </SubmenuTrigger>
+                  <Popover
+                    side={isMobile ? 'bottom' : 'right'}
+                    align={isMobile ? 'start' : 'end'}
+                    isNonModal
+                  >
+                    <Menu selectionMode="single" selectedKeys={new Set([theme])}>
+                      <MenuItem id="light" onAction={() => handleSelectTheme('light')}>
+                        <Icon>
+                          <Sun />
+                        </Icon>
+                        <Text weight={theme === 'light' ? 'bold' : undefined}>Light</Text>
+                      </MenuItem>
+                      <MenuItem id="dark" onAction={() => handleSelectTheme('dark')}>
+                        <Icon>
+                          <Moon />
+                        </Icon>
+                        <Text weight={theme === 'dark' ? 'bold' : undefined}>Dark</Text>
+                      </MenuItem>
+                    </Menu>
+                  </Popover>
+                </SubmenuTrigger>
+              </>
+            ) : null}
             {items.map(({ id, path, label, icon, separator, target, external }: any) => {
               if (separator) {
                 return <MenuSeparator key={id} />;

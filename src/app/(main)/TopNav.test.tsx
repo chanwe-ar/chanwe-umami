@@ -10,6 +10,8 @@ vi.mock('@/components/hooks', () => ({
   useNavigation: () => mockUseNavigation(),
 }));
 
+vi.mock('./ChanweWebNavigation', () => ({ ChanweWebNavigation: () => <span>Web navigation</span> }));
+
 vi.mock('@/components/input/TeamsButton', () => ({
   TeamsButton: () => <div>TeamsButton</div>,
 }));

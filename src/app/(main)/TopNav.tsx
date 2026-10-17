@@ -1,5 +1,6 @@
 'use client';
 import { Icon, Row } from '@umami/react-zen';
+import { ChanweBrand } from '@/components/common/ChanweBrand';
 import { useNavigation } from '@/components/hooks';
 import { Minus } from '@/components/icons';
 import { BoardSelect } from '@/components/input/BoardSelect';
@@ -7,11 +8,18 @@ import { LinkSelect } from '@/components/input/LinkSelect';
 import { PixelSelect } from '@/components/input/PixelSelect';
 import { TeamsButton } from '@/components/input/TeamsButton';
 import { WebsiteSelect } from '@/components/input/WebsiteSelect';
-import { ChanweBrand } from '@/components/common/ChanweBrand';
+import { ChanweWebNavigation } from './ChanweWebNavigation';
 
 /** The Espacios glyph (chanwe-ui brand/app-icons/svg/espacios-glyph.svg). */
 const EspaciosGlyph = () => (
-  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" aria-hidden="true">
+  <svg
+    viewBox="0 0 24 24"
+    width="18"
+    height="18"
+    fill="none"
+    stroke="currentColor"
+    aria-hidden="true"
+  >
     <rect x="2.5" y="2.5" width="19" height="19" rx="5.5" strokeWidth="1.6" />
     <rect x="7" y="7" width="4.4" height="4.4" rx="1.2" fill="currentColor" stroke="none" />
     <rect x="13.35" y="7.6" width="3.3" height="3.3" rx="0.9" strokeWidth="1.2" />
@@ -125,11 +133,14 @@ export function TopNav() {
         <ChanweBrand product={false} />
       </span>
       <span className="chanwe-topbar__actions">
+        <span className="chanwe-web-navigation">
+          <ChanweWebNavigation />
+        </span>
         <a
-          className="chanwe-topbar__action"
+          title="Volver a CHANWE Espacios"
+          className="chanwe-desktop-navigation chanwe-topbar__action"
           href="https://espacios.chanwe.ar/"
           aria-label="Volver a CHANWE Espacios"
-          title="Volver a CHANWE Espacios"
         >
           <EspaciosGlyph />
         </a>

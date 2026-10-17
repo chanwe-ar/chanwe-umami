@@ -16,12 +16,12 @@ import { OverlayScrollArea } from '@/components/common/OverlayScrollArea';
 import styles from '@/components/common/OverlayScrollArea.module.css';
 import { useGlobalState, useMessages, useNavigation } from '@/components/hooks';
 import {
+  ChevronLeft,
+  ChevronRight,
   Globe,
   Grid2x2,
   LayoutDashboard,
   LinkIcon,
-  ChevronLeft,
-  ChevronRight,
   PanelsLeftBottom,
 } from '@/components/icons';
 import { UserButton } from '@/components/input/UserButton';
@@ -139,6 +139,7 @@ export function SideNav(props: any) {
         )}
       </OverlayScrollArea>
       <Row
+        className="chanwe-sidenav__account"
         paddingTop="2"
         width="100%"
         justifyContent={isCollapsed ? 'center' : undefined}
