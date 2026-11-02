@@ -64,11 +64,15 @@ export function App({ children }) {
   return (
     <Grid
       columns={{ base: '1fr', lg: 'auto 1fr' }}
-      rows={{ base: 'auto 1fr', lg: '1fr' }}
+      rows={{ base: 'auto auto 1fr', lg: 'auto 1fr' }}
       height="screen"
     >
       <Row display={{ base: 'flex', lg: 'none' }} alignItems="center" gap padding="3">
         <MobileNav />
+      </Row>
+      {/* CHANWE shell: the bar runs edge to edge above the rail and the page (kit AppShell). */}
+      <Row style={{ gridColumn: '1 / -1', position: 'relative', zIndex: 120 }}>
+        <TopNav />
       </Row>
       <Column
         display={{ base: 'none', lg: 'flex' }}
@@ -79,7 +83,6 @@ export function App({ children }) {
         <PanelButton />
       </Column>
       <Column overflowX="hidden" minHeight="0" position="relative">
-        <TopNav />
         <Column
           alignItems="center"
           aria-hidden={needsTwoFactorSetup || undefined}

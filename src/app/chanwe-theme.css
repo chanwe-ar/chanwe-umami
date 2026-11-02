@@ -275,7 +275,7 @@ h6,
   --zen-surface-sunken: var(--chanwe-rail-hover);
   --zen-interactive-bg: var(--chanwe-rail-hover);
   --zen-interactive-bg-hover: var(--chanwe-rail-hover);
-  margin: calc(var(--chanwe-header-height) + 12px) 0 12px 12px;
+  margin: 12px 0 12px 12px;
   padding: 0 10px 10px;
   border: 0;
   border-radius: var(--cw-brand-radius-surface);
@@ -286,8 +286,8 @@ h6,
   color: var(--chanwe-rail-fg);
 }
 
-/* Head: the nav starts the bar's height plus 28px down, under its section
-   label, as .cw-sidebar__nav and .cw-sidebar__group-label do. */
+/* Head: the nav starts under its section label, as .cw-sidebar__nav and
+   .cw-sidebar__group-label do. The bar sits above the rail (App.tsx). */
 .chanwe-sidenav__head {
   padding: 18px 12px 10px;
 }
@@ -305,7 +305,7 @@ h6,
 /* Fold toggle: the kit's white square on the rail's edge (.cw-sidebar__toggle). */
 .chanwe-rail-toggle {
   position: absolute !important;
-  top: calc(var(--chanwe-header-height) + 20px);
+  top: 22px;
   right: -14px;
   width: 28px;
   height: 28px;
@@ -380,10 +380,12 @@ h6,
   border-top: 1px solid var(--chanwe-rail-rule);
 }
 
-/* Top bar: the kit's .cw-top-bar. 56px, white, one rule: product and the
-   pickers on the left, the wordmark centred, actions on the right, and the
-   scan line along the rule. */
+/* Top bar: the kit's .cw-top-bar. 56px glass, edge to edge above the rail and
+   the page, one rule: product and the pickers on the left, the wordmark
+   centred, actions on the right, and the scan line along the rule. */
 .chanwe-topbar {
+  position: relative !important;
+  flex: 1 1 auto;
   display: grid !important;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
@@ -401,6 +403,20 @@ h6,
   grid-column: 1;
   min-width: 0;
   gap: 12px;
+}
+
+/* Pickers (team, website, link…): a sentence pill as wide as its label, the
+   chevron next to it (Umami gives the label a fixed 200px). */
+.chanwe-topbar__start [data-slot="menu-trigger"],
+.chanwe-topbar__start [data-slot="select-trigger"] {
+  min-height: 36px;
+  gap: 8px;
+  padding-inline: 12px 10px;
+}
+
+.chanwe-topbar__start [data-slot="menu-trigger"] > div {
+  min-width: 0 !important;
+  max-width: 240px !important;
 }
 
 .chanwe-topbar__product {
@@ -489,6 +505,33 @@ h6,
 
 @media (prefers-reduced-motion: reduce) {
   .chanwe-scan-line::after { animation: none; }
+}
+
+/* Phones: the mobile bar above already carries the wordmark, the product and
+   the menu, so the top bar keeps only the pickers. */
+@media (max-width: 1023px) {
+  .chanwe-topbar {
+    display: flex !important;
+    justify-content: space-between !important;
+    padding: 0 12px !important;
+  }
+
+  .chanwe-topbar__product,
+  .chanwe-topbar__logo,
+  .chanwe-topbar__actions {
+    display: none !important;
+  }
+
+  .chanwe-topbar,
+  .chanwe-topbar__start {
+    min-width: 0;
+    max-width: 100vw;
+  }
+
+  .chanwe-topbar__start [data-slot="select-trigger"] {
+    min-width: 0 !important;
+    flex: 1 1 auto;
+  }
 }
 
 /* Phone bar: the kit's 56px mobile bar, flat, edge to edge, one rule. */
