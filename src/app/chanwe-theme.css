@@ -9,6 +9,11 @@
  *      kit-primitives.css): the 248/76 rail, the 56px bar, the page header,
  *      data tables, KPI tiles, pills, tabs and inputs.
  *
+ * CHANWE v2 (brandbook brand/guidelines/brand-v2.md, unification plan T5.4): the
+ * page ground is the canvas, what holds content a white pane at 12px, the rail a
+ * floating glass panel whose selected row is a tint (never an orange fill), the
+ * bar glass, every control a sentence-case pill, tabs a segmented pill.
+ *
  * Every colour is a var(--cw-brand-*) from ../brand/tokens.css, a copy of
  * chanwe-ui brand/tokens/tokens.css kept current by brand-sync. Do not write
  * hex values here: map a token. Components opt in with chanwe-* class names;
@@ -29,14 +34,16 @@
   --zen-font-family: var(--chanwe-font-body);
   --zen-font-family-mono: var(--chanwe-font-mono);
 
-  /* 4px on cards and controls; Tailwind's scale follows so rounded-* agree. */
-  --zen-radius: var(--cw-brand-radius-control);
-  --radius-sm: var(--cw-brand-radius-control);
-  --radius-md: var(--cw-brand-radius-control);
-  --radius-lg: var(--cw-brand-radius-card);
-  --radius-xl: var(--cw-brand-radius-card);
-  --radius-2xl: var(--cw-brand-radius-card);
-  --radius-3xl: var(--cw-brand-radius-card);
+  /* v2 shape (brand-v2.md §3): Zen's base radius rounds panels too, so it is
+     the pane (12px); the control slots are made pills one by one below.
+     Tailwind's scale gives rows 8px, panes 12px, surfaces 16px, bands 24px. */
+  --zen-radius: var(--cw-brand-radius-pane);
+  --radius-sm: var(--cw-brand-radius-row);
+  --radius-md: var(--cw-brand-radius-pane);
+  --radius-lg: var(--cw-brand-radius-pane);
+  --radius-xl: var(--cw-brand-radius-surface);
+  --radius-2xl: var(--cw-brand-radius-surface);
+  --radius-3xl: var(--cw-brand-radius-band);
 
   /* Zen's neutral scale, re-pointed at the slate-on-paper brand scale. */
   --zen-palette-50: var(--cw-brand-paper);
@@ -55,11 +62,12 @@
   --chanwe-primary-hover: color-mix(in srgb, var(--cw-brand-primary) 92%, var(--cw-brand-ink));
   --chanwe-primary-active: color-mix(in srgb, var(--cw-brand-primary) 84%, var(--cw-brand-ink));
   --chanwe-primary-tint: color-mix(in srgb, var(--cw-brand-primary) 7%, var(--cw-brand-pure-white));
-  --chanwe-rail-bg: var(--cw-brand-ink-light);
-  --chanwe-rail-fg: color-mix(in srgb, var(--cw-brand-pure-white) 65%, transparent);
-  --chanwe-rail-label: color-mix(in srgb, var(--cw-brand-pure-white) 35%, transparent);
-  --chanwe-rail-hover: color-mix(in srgb, var(--cw-brand-pure-white) 10%, transparent);
-  --chanwe-rail-rule: color-mix(in srgb, var(--cw-brand-pure-white) 10%, transparent);
+  /* v2 rail: glass on the canvas, following the theme (brand-v2.md §2, §7). */
+  --chanwe-rail-bg: var(--cw-brand-glass);
+  --chanwe-rail-fg: var(--cw-brand-fg-muted);
+  --chanwe-rail-label: var(--cw-brand-fg-subtle);
+  --chanwe-rail-hover: var(--cw-brand-tint);
+  --chanwe-rail-rule: var(--cw-brand-rule);
   --chanwe-header-height: 56px;
 }
 
@@ -69,9 +77,10 @@
   --zen-primary: var(--cw-brand-primary);
   --zen-primary-fg: var(--cw-brand-pure-white);
 
-  --zen-surface: var(--cw-brand-surface-raised);
-  --zen-surface-raised: var(--cw-brand-paper);
-  --zen-surface-sunken: var(--cw-brand-surface-sunken);
+  /* v2 ground and panes: the page is the canvas, cards and tables white panes. */
+  --zen-surface: var(--cw-brand-pane);
+  --zen-surface-raised: var(--cw-brand-canvas);
+  --zen-surface-sunken: var(--cw-brand-tint);
   --zen-surface-overlay: var(--cw-brand-surface-raised);
   --zen-surface-inverted: var(--cw-brand-ink);
   --zen-surface-disabled: var(--cw-brand-paper);
@@ -114,8 +123,8 @@
   --zen-status-error-bg: var(--cw-brand-status-error-bg);
   --zen-status-error-fg: var(--cw-brand-status-error);
 
-  --chanwe-bar-bg: var(--cw-brand-surface-raised);
-  --chanwe-row-hover: color-mix(in srgb, var(--cw-brand-primary) 4%, var(--cw-brand-pure-white));
+  --chanwe-bar-bg: var(--cw-brand-glass);
+  --chanwe-row-hover: var(--cw-brand-tint);
 }
 
 /* Dark: obsidian. Ink is the page, ink-light the cards, paper the text. */
@@ -124,9 +133,10 @@
   --zen-primary: var(--cw-brand-primary);
   --zen-primary-fg: var(--cw-brand-pure-white);
 
-  --zen-surface: var(--cw-brand-ink-light);
-  --zen-surface-raised: var(--cw-brand-ink);
-  --zen-surface-sunken: color-mix(in srgb, var(--cw-brand-ink-light) 55%, var(--cw-brand-ink));
+  /* v2 dark: the canvas is the lighter obsidian, panes the deep one (brand-v2.md §2). */
+  --zen-surface: var(--cw-brand-pane);
+  --zen-surface-raised: var(--cw-brand-canvas);
+  --zen-surface-sunken: var(--cw-brand-tint);
   --zen-surface-overlay: var(--cw-brand-ink-light);
   --zen-surface-inverted: var(--cw-brand-paper);
   --zen-surface-disabled: var(--cw-brand-ink-soft);
@@ -161,8 +171,8 @@
   --zen-status-error-bg: color-mix(in srgb, var(--cw-brand-status-error) 22%, transparent);
   --zen-status-error-fg: var(--cw-brand-status-error-bg);
 
-  --chanwe-bar-bg: var(--cw-brand-ink);
-  --chanwe-row-hover: color-mix(in srgb, var(--cw-brand-primary) 8%, var(--cw-brand-ink-light));
+  --chanwe-bar-bg: var(--cw-brand-glass);
+  --chanwe-row-hover: var(--cw-brand-tint);
 }
 
 html,
@@ -253,9 +263,10 @@ h6,
 /* ── 4. Shell ──────────────────────────────────────────────────────────── */
 
 /*
- * Sidebar: the dark rail of chanwe-ui app-shell.css, full height, flush to
- * the edge. Zen's variables are re-scoped inside it, so Umami's nav rows
- * (hover and selected use surface-sunken) pick up rail colours on their own.
+ * Sidebar: the v2 rail (brand-v2.md §7, Espacios' HomeRail), a floating
+ * rounded glass panel inset from the edges, rest depth. Zen's variables are
+ * re-scoped inside it, so Umami's nav rows (hover and selected use
+ * surface-sunken) pick up the rail's tint on their own.
  */
 .chanwe-sidenav {
   --zen-fg: var(--chanwe-rail-fg);
@@ -264,21 +275,21 @@ h6,
   --zen-surface-sunken: var(--chanwe-rail-hover);
   --zen-interactive-bg: var(--chanwe-rail-hover);
   --zen-interactive-bg-hover: var(--chanwe-rail-hover);
-  margin: 0;
-  padding: 0 12px 12px;
+  margin: calc(var(--chanwe-header-height) + 12px) 0 12px 12px;
+  padding: 0 10px 10px;
   border: 0;
-  border-radius: 0;
+  border-radius: var(--cw-brand-radius-surface);
   background-color: var(--chanwe-rail-bg);
-  /* The kit's faint dot field on obsidian (effects.css .cw-dot-field--ink). */
-  background-image: radial-gradient(rgba(248, 250, 252, 0.055) 1px, transparent 1px);
-  background-size: 16px 16px;
+  -webkit-backdrop-filter: blur(var(--cw-brand-glass-blur));
+  backdrop-filter: blur(var(--cw-brand-glass-blur));
+  box-shadow: inset 0 1px 0 var(--cw-brand-edge), inset 0 0 0 1px var(--cw-brand-rule), var(--cw-brand-shadow-rest);
   color: var(--chanwe-rail-fg);
 }
 
 /* Head: the nav starts the bar's height plus 28px down, under its section
    label, as .cw-sidebar__nav and .cw-sidebar__group-label do. */
 .chanwe-sidenav__head {
-  padding: calc(var(--chanwe-header-height) + 28px) 12px 10px;
+  padding: 18px 12px 10px;
 }
 
 .chanwe-sidenav__label {
@@ -303,15 +314,14 @@ h6,
   align-items: center;
   justify-content: center;
   padding: 0 !important;
-  border: 1px solid var(--cw-brand-rule) !important;
-  border-radius: 4px !important;
-  background: var(--cw-brand-pure-white) !important;
+  border: 0 !important;
+  border-radius: var(--cw-brand-radius-pill) !important;
+  background: var(--cw-brand-pane) !important;
   color: var(--cw-brand-body-fg);
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: inset 0 0 0 1px var(--cw-brand-rule), var(--cw-brand-shadow-lift);
 }
 
 .chanwe-rail-toggle:hover {
-  border-color: var(--cw-brand-primary) !important;
   color: var(--cw-brand-primary);
 }
 
@@ -329,19 +339,24 @@ h6,
     background-color 0.2s;
 }
 
-.chanwe-sidenav a:hover > * {
-  color: var(--cw-brand-pure-white);
+.chanwe-sidenav a > * {
+  border-radius: var(--cw-brand-radius-row);
 }
 
-/* Selected row: Umami marks it with bg-surface-sunken; the kit fills it orange. */
+.chanwe-sidenav a:hover > * {
+  color: var(--cw-brand-ink);
+}
+
+/* Selected row: Umami marks it with bg-surface-sunken; v2 makes it a neutral
+   tint with ink text, never an orange fill (brand-v2.md §6, §7). */
 .chanwe-sidenav a > .bg-surface-sunken,
 .chanwe-sidenav a > .bg-surface-sunken:hover {
-  background-color: var(--cw-brand-primary);
-  color: var(--cw-brand-pure-white);
+  background-color: var(--cw-brand-tint-strong);
+  color: var(--cw-brand-ink);
 }
 
 .chanwe-sidenav a > .bg-surface-sunken .font-bold {
-  font-weight: 500;
+  font-weight: 600;
 }
 
 /* Group labels (Traffic, Behavior…): the rail's tracked caps. */
@@ -359,9 +374,9 @@ h6,
 
 /* Footer (user button) sits on a rule, as the kit's sidebar footer does. */
 .chanwe-sidenav > :last-child {
-  width: calc(100% + 24px);
-  margin: 0 -12px;
-  padding: 12px 12px 0;
+  width: calc(100% + 20px);
+  margin: 0 -10px;
+  padding: 10px 10px 0;
   border-top: 1px solid var(--chanwe-rail-rule);
 }
 
@@ -378,6 +393,8 @@ h6,
   padding: 0 24px !important;
   border-bottom: 1px solid var(--zen-border);
   background-color: var(--chanwe-bar-bg);
+  -webkit-backdrop-filter: blur(var(--cw-brand-glass-blur));
+  backdrop-filter: blur(var(--cw-brand-glass-blur));
 }
 
 .chanwe-topbar__start {
@@ -431,7 +448,7 @@ h6,
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 4px;
+  border-radius: var(--cw-brand-radius-pill);
   color: var(--cw-brand-fg-subtle);
   transition:
     color 0.2s,
@@ -440,7 +457,7 @@ h6,
 
 .chanwe-topbar__action:hover {
   color: var(--cw-brand-ink);
-  background: var(--cw-brand-surface-sunken);
+  background: var(--cw-brand-tint);
 }
 
 /* The kit's scan line (effects.css .cw-scan-line), along the bar's rule. */
@@ -485,6 +502,8 @@ h6,
   border-bottom: 1px solid var(--zen-border);
   border-radius: 0;
   background-color: var(--chanwe-bar-bg);
+  -webkit-backdrop-filter: blur(var(--cw-brand-glass-blur));
+  backdrop-filter: blur(var(--cw-brand-glass-blur));
 }
 
 .chanwe-mobilebar > [data-slot="dialog-trigger"] {
@@ -510,6 +529,7 @@ h6,
 /* ── 6. Controls ───────────────────────────────────────────────────────── */
 
 [data-slot="button"][data-variant="primary"],
+[data-slot="loading-button"][data-variant="primary"],
 [data-slot="dialog-trigger"][data-variant="primary"],
 [data-slot="menu-trigger"][data-variant="primary"] {
   background-color: var(--cw-brand-primary);
@@ -533,6 +553,39 @@ h6,
   background-color: var(--chanwe-primary-active);
 }
 
+/* Every control is a pill in sentence case, Satoshi 500 (brand-v2.md §3, §5, §7).
+   Secondary and outline buttons are a pane with a hairline; quiet ones have no fill. */
+[data-slot="button"],
+[data-slot="loading-button"],
+[data-slot="input-group-button"],
+[data-slot="dialog-trigger"][data-variant],
+[data-slot="menu-trigger"],
+[data-slot="tooltip-trigger"][data-variant],
+[data-slot="toggle-group-item"] {
+  border-radius: var(--cw-brand-radius-pill);
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 500;
+}
+
+:is([data-slot="button"], [data-slot="dialog-trigger"])[data-variant="outline"],
+:is([data-slot="button"], [data-slot="dialog-trigger"])[data-variant="default"] {
+  border-color: transparent;
+  background-color: var(--cw-brand-pane);
+  color: var(--cw-brand-ink);
+  box-shadow: inset 0 0 0 1px var(--cw-brand-rule);
+}
+
+:is([data-slot="button"], [data-slot="dialog-trigger"])[data-variant="outline"]:hover,
+:is([data-slot="button"], [data-slot="dialog-trigger"])[data-variant="default"]:hover {
+  box-shadow: inset 0 0 0 1px var(--cw-brand-border-cool), var(--cw-brand-shadow-rest);
+}
+
+[data-slot="button"]:active,
+[data-slot="dialog-trigger"]:active {
+  transform: scale(0.97);
+}
+
 :is(button, a, input, select, textarea, summary, [role="tab"]):focus-visible {
   outline: 2px solid var(--cw-brand-primary);
   outline-offset: 2px;
@@ -547,21 +600,41 @@ h6,
 [data-slot="search-field"] > div,
 [data-slot="number-field-group"] {
   border-color: var(--chanwe-control-border);
-  border-radius: var(--cw-brand-radius-control);
+  border-radius: var(--cw-brand-radius-pill);
+  background-color: var(--cw-brand-pane);
   box-shadow: none;
+}
+
+/* A multi-line field is a pane (brand-v2.md §3). */
+[data-slot="textarea"] {
+  border-radius: var(--cw-brand-radius-surface);
 }
 
 [data-slot="input"]:focus-within,
 [data-slot="input-group"]:focus-within,
 [data-slot="textarea"]:focus,
 [data-slot="select-trigger"]:focus-visible {
-  border-color: var(--cw-brand-primary);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--cw-brand-primary) 24%, transparent);
+  border-color: var(--chanwe-control-border);
+  box-shadow: 0 0 0 2px var(--cw-brand-primary);
 }
 
-/* Tabs: the kit's underline segments; mono count chips stay as they are. */
-[data-slot="tabs-list"][data-variant="line"] {
-  border-color: var(--zen-border);
+/* Tabs (brand-v2.md §7): a segmented pill, tint track, obsidian selected pill. */
+[data-slot="tabs-list"] {
+  width: fit-content;
+  gap: 2px;
+  padding: 3px;
+  border: 0;
+  border-radius: var(--cw-brand-radius-pill);
+  background-color: var(--cw-brand-tint);
+}
+
+[data-slot="tabs-trigger"] {
+  padding-inline: 14px;
+  border-radius: var(--cw-brand-radius-pill);
+}
+
+[data-slot="tabs-indicator"] {
+  display: none;
 }
 
 [data-slot="tabs-trigger"] {
@@ -570,27 +643,21 @@ h6,
   font-weight: 500;
 }
 
-[data-slot="tabs-trigger"]:hover,
-[data-slot="tabs-trigger"][data-selected],
-[data-slot="tabs-trigger"][aria-selected="true"] {
+[data-slot="tabs-trigger"]:hover {
   color: var(--zen-fg);
 }
 
-[data-slot="tabs-indicator"] {
-  background-color: var(--cw-brand-primary);
-}
-
-/* Default (boxed) tabs and toggle groups: the kit's box segments, ink when active. */
-[data-slot="tabs-list"][data-variant="default"] [data-slot="tabs-trigger"][aria-selected="true"],
+[data-slot="tabs-trigger"][data-selected],
+[data-slot="tabs-trigger"][aria-selected="true"],
 [data-slot="toggle-group-item"][data-pressed] {
   background-color: var(--cw-brand-ink);
   color: var(--cw-brand-pure-white);
 }
 
-/* Pills and badges: mono caps, 4px. */
+/* Pills and badges: mono caps, pills. */
 [data-slot="badge"],
 [data-slot="tag"] {
-  border-radius: var(--cw-brand-radius-control);
+  border-radius: var(--cw-brand-radius-pill);
   font: 500 11px / 1 var(--chanwe-font-mono);
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -645,11 +712,21 @@ h6,
 
 /* ── 8. KPI tiles and change pills ─────────────────────────────────────── */
 
+/* Zen's panels (bg-surface with a border at Zen's radius) are v2 panes: 12px,
+   hairline, rest depth (brand-v2.md §2, §4). */
+.bg-surface.border[class*="rounded-[var(--zen-radius)]"] {
+  border-color: var(--cw-brand-rule);
+  box-shadow: var(--cw-brand-shadow-rest);
+}
+
+/* A KPI tile is a pane (brand-v2.md §2, §4): white, 12px, hairline and rest depth. */
 .chanwe-kpi {
   gap: 10px;
   padding: 16px 20px 20px;
-  border-color: var(--zen-border);
-  border-radius: var(--cw-brand-radius-card);
+  border-color: transparent;
+  border-radius: var(--cw-brand-radius-pane);
+  background-color: var(--cw-brand-pane);
+  box-shadow: inset 0 0 0 1px var(--cw-brand-rule), var(--cw-brand-shadow-rest);
 }
 
 .chanwe-kpi .chanwe-kpi__label {
@@ -668,7 +745,7 @@ h6,
 }
 
 .chanwe-change {
-  border-radius: var(--cw-brand-radius-control);
+  border-radius: var(--cw-brand-radius-pill);
   font: 500 11px / 1 var(--chanwe-font-mono);
   letter-spacing: 0.06em;
 }
@@ -682,7 +759,8 @@ h6,
 /* Chart.js draws on canvas with colours from src/lib/brand.ts; the legend is HTML. */
 [data-slot="tooltip-bubble"],
 [data-slot="tooltip"] {
-  border-radius: var(--cw-brand-radius-control);
+  border-radius: var(--cw-brand-radius-row);
+  box-shadow: var(--cw-brand-shadow-overlay);
 }
 
 @media (prefers-reduced-motion: reduce) {
