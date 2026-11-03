@@ -1,0 +1,44 @@
+# Local run of CHANWE's Umami image (docs/en/start_here.md, docs/es/start_here.md).
+# Builds the repo's Dockerfile and starts it with a throwaway PostgreSQL and Redis.
+# Placeholder secrets only; never put real values here. The root docker-compose.yml is the
+# upstream fork's and pulls ghcr.io/polyjapan/umami-sso, not this code.
+#   docker compose -f docker/compose.local.yml up --build
+#   open http://localhost:3000   (health: http://localhost:3000/api/heartbeat)
+# Without OIDC_* the password form is shown: the seeded account is admin / umami.
+name: umami-local
+services:
+  db:
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_DB: umami
+      POSTGRES_USER: umami
+      POSTGRES_PASSWORD: umami
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U umami -d umami"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+  redis:
+    image: redis:8-alpine
+  app:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    image: chanwe/umami:local
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    ports:
+      - "127.0.0.1:3000:3000"
+    environment:
+      DATABASE_URL: postgresql://umami:umami@db:5432/umami
+      REDIS_URL: redis://redis:6379/2
+      APP_SECRET: local-only-placeholder
+      TWO_FACTOR_ENCRYPTION_KEY: "0000000000000000000000000000000000000000000000000000000000000000"
+      # Sign-in through Identity needs a client whose redirects include
+      # http://localhost:3000/api/auth/oidc/callback; leave these empty to use the password form.
+      OIDC_ISSUER: ${OIDC_ISSUER:-}
+      OIDC_CLIENT_ID: ${OIDC_CLIENT_ID:-}
+      OIDC_CLIENT_SECRET: ${OIDC_CLIENT_SECRET:-}
