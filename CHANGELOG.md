@@ -5,6 +5,8 @@ https://github.com/umami-software/umami/releases
 
 ## Unreleased
 
+- Brand copies from chanwe-brandbook 2.3.0 (`pnpm brand:sync`): `src/brand/tokens.css` and `tokens.json` gain the new tokens (dot field, `favorite`, `callout`, `eyebrow`, `code`, `syntax`); nothing Umami draws changes.
+
 - CHANWE v2 brand copies synced from chanwe-brandbook 2.0.1 (`pnpm brand:sync`): 12 files (v2 wordmark, icons and favicons; generated files only change the brand paths in their comments).
 
 - Brand copies refreshed from kit 1.1.0 (`pnpm brand:sync`): fg-subtle is now #5B6677, new tokens primary-hover, primary-pressed and shell-bar.
