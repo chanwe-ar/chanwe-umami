@@ -1,3 +1,4 @@
+/* Written in chanwe-brandbook (brand/ui/apps/umami-web-navigation.css) and copied here by its brand:sync (D-0060). Never edit this copy. */
 /* Canonical web utilities adapter. Copy with web-navigation.js; tokens come from the provider theme. */
 .cw-native-navigation { display: inline-flex; align-items: center; gap: 2px; }
 .cw-native-navigation .cw-top-bar__action { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; padding: 0; border: 0; border-radius: var(--cw-brand-radius-control, 4px); background: transparent; color: var(--cw-brand-fg-subtle, #64748b); cursor: pointer; text-decoration: none; }
