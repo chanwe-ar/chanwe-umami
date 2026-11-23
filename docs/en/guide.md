@@ -82,7 +82,8 @@ A release is the `version` in `package.json` (`<upstream>-chanwe.<n>`; raise `<n
 ## Deploy
 
 Umami is an infrastructure stack on the home server (`INFRA` in `chanwe-proxmox-server/stacks/ops/lib/common.sh`), so
-the 5-minute deploy timer does not pick up merges. After the merge to `master`:
+the round's `chanwe-update --deploy` does not deploy it either (merging deploys nothing since S24, 2026-11-23). After the
+merge to `master`:
 
 ```bash
 ssh apps chanwe-update --infra umami --rebuild

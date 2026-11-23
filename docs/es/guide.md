@@ -83,8 +83,8 @@ título en `CHANGELOG.md`, en el mismo merge. No hay tag ni paquete que publicar
 ## Desplegar
 
 En el servidor de casa, Umami es un stack de infraestructura (`INFRA` en
-`chanwe-proxmox-server/stacks/ops/lib/common.sh`), así que el timer de deploy de cada 5 minutos no toma los merges.
-Después del merge a `master`:
+`chanwe-proxmox-server/stacks/ops/lib/common.sh`), así que tampoco lo despliega el `chanwe-update --deploy` de la ronda
+(mergear no despliega nada desde S24, 2026-11-23). Después del merge a `master`:
 
 ```bash
 ssh apps chanwe-update --infra umami --rebuild
