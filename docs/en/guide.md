@@ -28,7 +28,7 @@ never edited here. Every merge gets a note under `## Unreleased` in `CHANGELOG.m
 ### Theme and layout
 
 `src/app/chanwe-theme.css` (written in chanwe-brandbook as `brand/ui/apps/umami.css` and copied here by its `brand:sync`,
-D-0060: change it there; `node --test brand-copies.test.mjs` checks the copies) maps Zen's `--zen-*` variables onto the
+D-0060: change it there; `pnpm test:brand` checks the copies) maps Zen's `--zen-*` variables onto the
 tokens and restyles the shell toward the kit. It is
 loaded last from `src/app/layout.tsx`, unlayered, so no `!important`. Check light and dark, the rail collapsed and open,
 and the mobile nav.
@@ -67,7 +67,7 @@ Real values are in the server's `stacks/umami/.env` and chanwe-locker. A new var
 
 ```bash
 pnpm install
-pnpm test                     # Vitest
+pnpm test                     # the brand copies (D-0060), then Vitest
 pnpm lint
 docker build -t chanwe/umami:local .
 docker compose -f docker/compose.local.yml up --build    # http://localhost:3000, admin / umami

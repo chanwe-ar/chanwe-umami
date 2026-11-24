@@ -5,6 +5,8 @@ https://github.com/umami-software/umami/releases
 
 ## Unreleased
 
+- `pnpm test` runs the brand guard first (`pnpm test:brand`, `brand-copies.test.mjs`; nothing ran it before). It now checks the tokens' copy too and every stylesheet in the repo, not only `src/app`: the ones that aren't brandbook copies are upstream Umami's, listed by path.
+
 - Docker build fits the home server's 2 GB builder again (it was killed with `cannot allocate memory` on
   2026-11-24): the builder stage sets `NEXT_LOW_MEMORY_BUILD=1`, and `next.config.ts` then builds without
   Turbopack's filesystem cache (on by default in Next 16.4, thrown away by a Docker build) and source maps, with one

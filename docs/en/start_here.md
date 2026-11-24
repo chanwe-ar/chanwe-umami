@@ -62,7 +62,7 @@ cp .env.chanwe.example .env      # set DATABASE_URL and APP_SECRET; leave OIDC_*
 pnpm install
 pnpm build                       # checks env, generates Prisma, runs migrations (check:db), builds tracker and app
 pnpm start                       # or pnpm dev for next dev
-pnpm test                        # Vitest (generates the Prisma client first)
+pnpm test                        # the brand copies (D-0060), then Vitest (generates the Prisma client first)
 pnpm lint
 ```
 

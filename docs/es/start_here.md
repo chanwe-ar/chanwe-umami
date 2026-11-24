@@ -63,7 +63,7 @@ cp .env.chanwe.example .env      # completá DATABASE_URL y APP_SECRET; dejá OI
 pnpm install
 pnpm build                       # revisa el entorno, genera Prisma, corre migraciones (check:db), arma tracker y app
 pnpm start                       # o pnpm dev para next dev
-pnpm test                        # Vitest (genera antes el cliente de Prisma)
+pnpm test                        # las copias de marca (D-0060) y después Vitest (genera antes el cliente de Prisma)
 pnpm lint
 ```
 
