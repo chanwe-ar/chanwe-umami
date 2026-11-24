@@ -28,7 +28,9 @@ lista [start_here.md](start_here.md), así los merges de upstream quedan chicos;
 
 ### Tema y layout
 
-`src/app/chanwe-theme.css` mapea las variables `--zen-*` de Zen a los tokens y acerca el shell al kit. Se carga último
+`src/app/chanwe-theme.css` (se escribe en chanwe-brandbook como `brand/ui/apps/umami.css` y su `brand:sync` la copia
+acá, D-0060: se cambia allá; `node --test brand-copies.test.mjs` revisa las copias) mapea las variables `--zen-*` de Zen
+a los tokens y acerca el shell al kit. Se carga último
 desde `src/app/layout.tsx`, sin capa, así que no hace falta `!important`. Revisá claro y oscuro, el riel cerrado y
 abierto, y la navegación móvil.
 

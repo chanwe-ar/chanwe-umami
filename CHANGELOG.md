@@ -5,6 +5,12 @@ https://github.com/umami-software/umami/releases
 
 ## Unreleased
 
+## 3.4.1-chanwe.2 - 2026-11-23
+
+- Brand copies from chanwe-brandbook (D-0062, 2026-11-23): the tokens gain `signal-{ok,warn,fail,plan}` and their `-bg` washes (light and dark), for screens that show a live system's state; nothing else changes.
+
+- `src/app/chanwe-theme.css` and `src/app/chanwe-web-navigation.css` are written in chanwe-brandbook (`brand/ui/apps/umami.css`, `umami-web-navigation.css`, D-0060) and copied here by its `brand:sync`; their only change is a first line naming the source. `node --test brand-copies.test.mjs` fails on a copy without it or a new stylesheet beside them.
+
 - Docs: merging no longer deploys; deploys are by hand (S24, chanwe-proxmox-server, 2026-11-23).
 
 - CHANWE v2 brand copies synced from chanwe-brandbook 2.0.1 (`pnpm brand:sync`): 12 files (v2 wordmark, icons and favicons; generated files only change the brand paths in their comments).
