@@ -220,7 +220,7 @@ h6,
 .chanwe-brand {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--cw-brand-space-sm);
   min-width: 0;
 }
 
@@ -276,7 +276,7 @@ h6,
   --zen-surface-sunken: var(--chanwe-rail-hover);
   --zen-interactive-bg: var(--chanwe-rail-hover);
   --zen-interactive-bg-hover: var(--chanwe-rail-hover);
-  margin: 12px 0 12px 12px;
+  margin: var(--cw-brand-space-sm) 0 var(--cw-brand-space-sm) var(--cw-brand-space-sm);
   padding: 0 10px 10px;
   border: 0;
   border-radius: var(--cw-brand-radius-surface);
@@ -390,10 +390,10 @@ h6,
   display: grid !important;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  gap: 24px;
+  gap: var(--cw-brand-space-lg);
   height: var(--chanwe-header-height);
   min-height: var(--chanwe-header-height);
-  padding: 0 24px !important;
+  padding: 0 var(--cw-brand-space-lg) !important;
   border-bottom: 1px solid var(--zen-border);
   background-color: var(--chanwe-bar-bg);
   -webkit-backdrop-filter: blur(var(--cw-brand-glass-blur));
@@ -403,7 +403,7 @@ h6,
 .chanwe-topbar__start {
   grid-column: 1;
   min-width: 0;
-  gap: 12px;
+  gap: var(--cw-brand-space-sm);
 }
 
 /* Pickers (team, website, link…): a sentence pill as wide as its label, the
@@ -411,7 +411,7 @@ h6,
 .chanwe-topbar__start [data-slot="menu-trigger"],
 .chanwe-topbar__start [data-slot="select-trigger"] {
   min-height: 36px;
-  gap: 8px;
+  gap: var(--cw-brand-space-xs);
   padding-inline: 12px 10px;
 }
 
@@ -423,7 +423,7 @@ h6,
 .chanwe-topbar__product {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--cw-brand-space-sm);
   flex: none;
 }
 
@@ -514,7 +514,7 @@ h6,
   .chanwe-topbar {
     display: flex !important;
     justify-content: space-between !important;
-    padding: 0 12px !important;
+    padding: 0 var(--cw-brand-space-sm) !important;
   }
 
   .chanwe-topbar__product,
@@ -542,7 +542,7 @@ h6,
 
 .chanwe-mobilebar {
   min-height: var(--chanwe-header-height);
-  padding: 0 8px;
+  padding: 0 var(--cw-brand-space-xs);
   border-bottom: 1px solid var(--zen-border);
   border-radius: 0;
   background-color: var(--chanwe-bar-bg);
