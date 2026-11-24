@@ -38,6 +38,10 @@ ARG BASE_PATH
 ENV BASE_PATH=$BASE_PATH
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV DATABASE_URL="postgresql://user:pass@localhost:5432/dummy"
+# CHANWE: the home server builds this image in a buildx builder capped at 2 GB, and a default `next build` peaks
+# above that cap plus its swap and is killed (`cannot allocate memory`). This makes next.config.ts build without
+# Turbopack's filesystem cache and source maps, with one page-data worker; the reasons are in a comment there.
+ENV NEXT_LOW_MEMORY_BUILD=1
 
 ARG SKIP_BUILD_GEO
 ENV SKIP_BUILD_GEO=$SKIP_BUILD_GEO

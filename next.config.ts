@@ -10,6 +10,16 @@ const RECORDER_SCRIPT = '/recorder.js';
 
 const isProd = process.env.NODE_ENV === 'production';
 const isVercel = Boolean(process.env.VERCEL);
+// CHANWE: set by the Dockerfile's builder stage. The home server builds the image in a buildx builder capped at
+// 2 GB of RAM (plus the swap Docker allows by default, another 2 GB), and buildkitd itself lives inside that cap.
+// With Next's defaults the build was killed there (2026-11-24, `cannot allocate memory`). Peak RSS of the build's
+// processes, measured locally on 2026-11-24 (native, no swap): defaults with 3 page-data workers ~3.3 GB; with
+// this ~1.85 GB.
+// - turbopackFileSystemCacheForBuild: off. On by default in Next 16.4; it tracks dependencies for the cache and
+//   writes it to .next/cache while pages are collected, and a Docker build throws that cache away (~0.6-0.8 GB).
+// - turbopackSourceMaps / turbopackInputSourceMaps: off (~0.4-0.9 GB). Server stack traces are not source-mapped.
+// - cpus: 1 page-data worker instead of one per CPU, each a Node process of ~0.35 GB.
+const lowMemoryBuild = Boolean(process.env.NEXT_LOW_MEMORY_BUILD);
 
 const apiUrl = process.env.API_URL || '';
 const basePath = process.env.BASE_PATH || '';
@@ -229,6 +239,12 @@ export default withNextIntl({
   },
   experimental: {
     useTypeScriptCli: true,
+    ...(lowMemoryBuild && {
+      cpus: 1,
+      turbopackFileSystemCacheForBuild: false,
+      turbopackSourceMaps: false,
+      turbopackInputSourceMaps: false,
+    }),
   },
   async headers() {
     return headers;

@@ -5,6 +5,12 @@ https://github.com/umami-software/umami/releases
 
 ## Unreleased
 
+- Docker build fits the home server's 2 GB builder again (it was killed with `cannot allocate memory` on
+  2026-11-24): the builder stage sets `NEXT_LOW_MEMORY_BUILD=1`, and `next.config.ts` then builds without
+  Turbopack's filesystem cache (on by default in Next 16.4, thrown away by a Docker build) and source maps, with one
+  page-data worker. The build's peak drops from ~3.3 GB to ~1.85 GB. Server stack traces in the image are no longer
+  source-mapped.
+
 ## 3.4.1-chanwe.2 - 2026-11-23
 
 - Brand copies from chanwe-brandbook (D-0062, 2026-11-23): the tokens gain `signal-{ok,warn,fail,plan}` and their `-bg` washes (light and dark), for screens that show a live system's state; nothing else changes.
