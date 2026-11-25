@@ -5,6 +5,8 @@ https://github.com/umami-software/umami/releases
 
 ## Unreleased
 
+- Brand copies (chanwe-brandbook D-0079, 2026-11-25): the CHANWE menu's panel has its shadow.
+
 - Brand copies from chanwe-brandbook (2026-11-24): the theme reads brand tokens where the value is the same, and the account link takes the brand orange (it fell back to an off-brand one).
 
 - `pnpm test` runs the brand guard first (`pnpm test:brand`, `brand-copies.test.mjs`; nothing ran it before). It now checks the tokens' copy too and every stylesheet in the repo, not only `src/app`: the ones that aren't brandbook copies are upstream Umami's, listed by path.
