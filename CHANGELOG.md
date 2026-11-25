@@ -5,6 +5,8 @@ https://github.com/umami-software/umami/releases
 
 ## Unreleased
 
+- The CHANWE logo with the trimmed h (brandbook D-0086, Ale 2026-11-25): the logo files are the brandbook's copies again (`brand:sync`).
+
 - Brand copies (chanwe-brandbook D-0079, 2026-11-25): the CHANWE menu's panel has its shadow.
 
 - Brand copies from chanwe-brandbook (2026-11-24): the theme reads brand tokens where the value is the same, and the account link takes the brand orange (it fell back to an off-brand one).
